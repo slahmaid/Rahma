@@ -1,0 +1,96 @@
+# Sahaby orders → Google Sheets: setup
+
+## 1. Create the sheet and script
+1. Open Google Sheets and create a blank spreadsheet, e.g. **Sahaby Orders**.
+2. Open **Extensions → Apps Script**.
+3. Delete the sample code in `Code.gs` and paste all of `backend/Code.gs`. Click **Save** (💾).
+4. In the toolbar function dropdown, choose **`setup`** and click **Run**.
+   - Google asks for permission: **Review permissions → your account → Advanced → Go to (project) (unsafe) → Allow**.
+     This is normal for your own script.
+5. Go back to the sheet. You now have:
+   - **Orders**: styled, RTL, with a status dropdown.
+   - **Dashboard**: KPIs, orders by status, top products, top cities.
+   - **Config**: hidden; holds the stable API keys, statuses and prices.
+6. Optional: run **`testOrder`** once to add a sample row. Delete that row afterwards.
+
+## 2. ADMIN_TOKEN (for the future admin panel)
+`setup()` creates a random token automatically. To view or change it, go to
+**Apps Script → ⚙️ Project Settings → Script properties**:
+
+| Property | Value |
+|---|---|
+| `ADMIN_TOKEN` | a long random string (≥ 8 chars). Keep it secret and never put it in the website. |
+| `NOTIFY_ENABLED` | `true` to get an email for each new order (default `false`) |
+| `NOTIFY_EMAIL` | the address that receives the notifications |
+
+## 3. Deploy as a Web app
+1. **Deploy → New deployment →** ⚙️ select type **Web app**.
+2. Description: `v1`. **Execute as: Me**. **Who has access: Anyone**.
+3. Click **Deploy**, authorise if asked, then copy the **Web app URL** (it ends with `/exec`).
+
+## 4. Connect the website
+Open `product.html`, find the first `<script>` block ("ORDER CONFIG"), and replace
+
+```js
+const ORDER_ENDPOINT='PASTE_WEB_APP_URL_HERE';
+```
+
+with your URL. Also set `WA_NUMBER` to the real WhatsApp number (international format, no `+`).
+Place a test order on the site; it should appear in **Orders** within a few seconds.
+
+## 5. Important: redeploying after edits
+Changing `Code.gs` does **not** update the live URL by itself. After every edit:
+**Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**.
+The URL stays the same. (Creating a *New deployment* instead would give a new URL.)
+
+Prices live in `PRODUCTS` inside `Code.gs`. When you change a price on the site, change it there too and redeploy. The server always recalculates totals from this list.
+
+---
+
+## Admin API
+Base URL: your `/exec` URL. Every response is JSON with `ok: true|false`.
+POST bodies are JSON sent as `Content-Type: text/plain`, which avoids the CORS preflight.
+
+### Public
+| Call | Description |
+|---|---|
+| `GET /exec` | Health check: `{ok, service, version}` |
+| `POST /exec` `{productId, qty, name, phone, city, source?, notes?, website?}` | Creates an order and returns `{ok, orderId, total, delivery}`. Errors: `validation` (+ `fields`), `bad_json`. A duplicate (same phone + product within 2 min) returns `{ok, duplicate:true, orderId}`. `website` is the honeypot and must be empty. |
+
+### Admin (token required)
+| Call | Description |
+|---|---|
+| `GET ?action=list&token=T[&status=new][&from=YYYY-MM-DD][&to=YYYY-MM-DD][&search=txt][&page=1][&pageSize=50]` | `{total, page, pageSize, pages, items[]}`, newest first. `pageSize` ≤ 200. `status` accepts the key or the Arabic label. |
+| `GET ?action=get&id=SH-…&token=T` | `{order}` |
+| `GET ?action=stats&token=T` | `{totalOrders, today, byStatus{}, revenueDelivered, pipeline, topProducts[], topCities[]}` |
+| `GET ?action=meta&token=T` | Columns (key + label), statuses, products |
+| `POST {action:"updateStatus", token, id, status}` | `status` = key or Arabic label |
+| `POST {action:"updateNote", token, id, note}` | Replaces the note |
+| `POST {action:"delete", token, id}` | Soft delete: status becomes `ملغى` and a `[محذوف …]` tag is added to the notes |
+| `POST {action:"bulkStatus", token, ids:[…], status}` *(v1.1)* | Updates up to 500 orders → `{updated, ids, missing}` |
+| `POST {action:"updateOrder", token, id, fields:{name?, phone?, city?, address?, qty?, productId?}}` *(v1.1)* | Edits the order. Product, unit price, total and delivery are recalculated on the server |
+| `GET ?action=history&id=…&token=T` *(v1.1)* | Change log `[{at, field, from, to, by}]`, also returned by `get` |
+| `GET ?action=stats&days=14&token=T` *(v1.1)* | Adds a `series` of `[{date, orders, revenue, delivered}]` |
+
+Every POST may include `by` (who made the change), which is written to the **History** sheet.
+`list` also accepts `productId` and `city` filters, and `pageSize` up to 500.
+
+Order object keys (stable, from the hidden row 1):
+`id, createdAt, name, phone, city, product, productId, qty, unitPrice, total, delivery, status, notes, source, updatedAt`,
+plus `statusKey` and `_row`.
+
+Status keys: `new` جديد · `confirmed` مؤكد · `shipping` قيد الشحن · `delivered` تم التسليم · `cancelled` ملغى · `no_answer` لا يجيب.
+
+**Security note:** the admin panel must keep the token server-side or ask the admin to type it in. Never embed it in public pages.
+
+## Upgrading v1.0 → v1.1 (admin panel)
+1. Replace all of `Code.gs` with the new version and click **Save**.
+2. **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**. The URL stays the same.
+3. You do **not** need to run `setup()` again. On the first request, the script adds the new **العنوان / address** column and creates the **History** sheet by itself. Doing this again changes nothing.
+
+## Admin panel
+Open `admin/index.html`, paste the `ADMIN_TOKEN`, and keep the default API URL, which can be changed in Settings.
+Don't link to the panel from the public site; it is already marked `noindex`.
+
+## Local test
+`node backend/test-mock.js backend/Code.gs` runs 51 checks against a mocked Spreadsheet/Cache/Lock environment.

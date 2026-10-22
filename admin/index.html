@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>لوحة التحكم | صحابي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <div class="lg-card">
+    <form class="lg-form" id="lgf" autocomplete="off">
+      <div class="lg-logo">صحابي</div>
+      <h1 class="lg-h">مرحباً بعودتك <span class="wave">👋</span></h1>
+      <div class="lg-field">
+        <svg class="lg-ic" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor" stroke="none"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <input id="lg-token" type="password" placeholder="رمز الدخول (ADMIN_TOKEN)" dir="auto" required aria-label="رمز الدخول">
+        <button type="button" class="lg-eye" id="lg-eye" aria-label="إظهار الرمز"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+      <div class="lg-row">
+        <label class="lg-tgl"><input type="checkbox" id="lg-remember" checked><span></span>تذكرني</label>
+        <button type="button" class="lg-link" id="lg-forgot" aria-expanded="false">نسيت الرمز؟</button>
+      </div>
+      <div class="lg-hint" id="lg-hint" hidden>الرمز موجود في: <b>Apps Script ← Project Settings ← Script properties ← <span dir="ltr">ADMIN_TOKEN</span></b>. انسخه والصقه هنا.</div>
+      <div class="lg-err" id="lg-err" role="alert"></div>
+      <button class="lg-btn" id="lg-btn" type="submit"><span class="lg-btn-t">دخول</span><svg viewBox="0 0 24 24"><path d="M3 11.5L21 3l-7.5 18-2.5-7.5z" fill="currentColor" stroke="none"/></svg></button>
+      <p class="lg-foot">لوحة إدارة طلبات <b>صحابي</b></p>
+      <details class="lg-adv"><summary>إعدادات الاتصال</summary>
+        <input id="lg-url" dir="ltr" aria-label="رابط الـ API">
+      </details>
+    </form>
+    <div class="lg-art" aria-hidden="true"></div>
+  </div>
+</div>
+
+<div id="app" class="app" hidden>
+  <aside class="side" id="side">
+    <div class="side-logo">صحابي <small>الإدارة</small></div>
+    <nav class="side-nav" id="nav">
+      <a href="#/dashboard" data-v="dashboard"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z"/></svg>لوحة القيادة</a>
+      <a href="#/orders" data-v="orders"><svg viewBox="0 0 24 24"><path d="M6 3h12l2 4v14H4V7z"/><path d="M4 7h16M9 11h6"/></svg>الطلبات <b class="nb" id="nb-new" hidden>0</b></a>
+      <a href="#/customers" data-v="customers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M16 4a4 4 0 0 1 0 8M22 21c0-3-2-5-4-5.5"/></svg>العملاء</a>
+      <a href="#/products" data-v="products"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>المنتجات</a>
+      <a href="#/settings" data-v="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>الإعدادات</a>
+    </nav>
+    <button class="side-out" id="logout" type="button"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>تسجيل الخروج</button>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <header class="top">
+      <button class="burger" id="burger" type="button" aria-label="القائمة"><span></span><span></span><span></span></button>
+      <h1 id="title">لوحة القيادة</h1>
+      <div class="top-act">
+        <span class="sync" id="sync" title="آخر تحديث"></span>
+        <label class="tgl" title="تحديث تلقائي"><input type="checkbox" id="auto"><span></span><em>تلقائي</em></label>
+        <button class="btn ghost" id="refresh" type="button" title="تحديث"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg><em>تحديث</em></button>
+      </div>
+    </header>
+    <main class="view" id="view"></main>
+  </div>
+</div>
+
+<aside class="drawer" id="drawer" aria-hidden="true"><div class="dr-in" id="dr"></div></aside>
+<div class="dscrim" id="dscrim"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div id="print" class="print-area"></div>
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+﻿*.png
+!assets/*.png
+sahaby.zip
+header.html
+.DS_Store
+Thumbs.db

@@ -1,0 +1,65 @@
+/* Sahaby shared UX/a11y layer (loaded after page styles). Brand rules unchanged. */
+picture{display:contents}
+:focus{outline:none}
+:focus-visible{outline:3px solid #b8862b!important;outline-offset:2px}
+.skip{position:absolute;right:12px;top:-60px;z-index:200;background:#1f3a2e;color:#fff;padding:10px 18px;font-weight:700;text-decoration:none}
+.skip:focus{top:12px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* sticky header on every size */
+.header{position:sticky;top:0;z-index:40;transition:box-shadow .2s}
+.header.scrolled{box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.fbar{top:var(--hdr,84px)!important}
+.mobile-menu{z-index:39}
+/* contrast (WCAG AA) */
+.see-all,.crumb b,.nav a.on,.mobile-menu a.on{color:#8a6420!important}
+.p-tag,.f-wa,.pf-banner a,.why b+span{background-color:#93691f}
+.p-tag{background:#93691f!important}.f-wa{background:#93691f!important}
+.acts .wa{background:#167a42!important}
+.wa-float{background:#1c9e4e!important}
+/* tap targets */
+.burger{width:44px!important;height:44px!important}
+.qty button{width:44px!important;height:44px!important}.qty input{height:44px}
+.social a{min-width:44px;min-height:44px}
+.dots button{position:relative}.dots button::after{content:"";position:absolute;inset:-17px}
+/* safe areas */
+.wa-float{bottom:calc(18px + env(safe-area-inset-bottom))!important;left:calc(18px + env(safe-area-inset-left))!important}
+.sticky-buy{padding-bottom:calc(10px + env(safe-area-inset-bottom))!important}
+.footer{padding-bottom:env(safe-area-inset-bottom)}
+/* scroll to top */
+.to-top{position:fixed;right:calc(18px + env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));z-index:49;width:46px;height:46px;border:0;background:#1f3a2e;color:#f1d08a;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.2);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .2s}
+.to-top.on{opacity:1;transform:none;pointer-events:auto}.to-top:hover{background:#93691f}.to-top svg{width:22px;height:22px}
+body.pp-page .to-top{bottom:calc(84px + env(safe-area-inset-bottom))}
+/* product page: sticky gallery on desktop */
+@media(min-width:861px){.pp .gal{position:sticky;top:calc(var(--hdr,84px) + 16px)}}
+/* form */
+.fld input[aria-invalid=true]{border-color:#c0392b}
+.fld.ok input{border-color:#2e7d4f}
+/* mobile readability */
+@media(max-width:860px){
+ .p-body p,.p-tag,.badge,.sum .note,.lg-foot,.f-bottom,.f-bottom span{font-size:13px!important}
+ .see-all{display:inline-block;padding:8px 4px}
+ .crumb a{display:inline-block;padding:10px 0}
+ .p-body h3 a{display:block;padding:6px 0}
+ .f-col a,.f-col span{min-height:44px;display:inline-flex;align-items:center}
+ .footer{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+ body.menu-open{overflow:hidden}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media print{
+ .header,.mobile-menu,.wa-float,.to-top,.sticky-buy,.slider .dots,.skip,.footer .social,.f-wa,.burger{display:none!important}
+ body{background:#fff}.p-card,.fx-img,.cod{box-shadow:none!important}
+ a{color:inherit!important;text-decoration:none!important}
+}
+
+/* QA: mobile minimum text sizes & tap targets (pass 2) */
+@media (max-width:860px){
+ .rv-user small,.pf-grid p,.vals p{font-size:13px!important}
+ .pl-hero nav a{display:inline-block;padding:10px 4px}
+}
+/* QA: contrast pass 2 (gold accent text on light backgrounds) */
+.fx h2 span,.fx h3 span,.pf-txt h3 span,.ab-txt h2 span,.ab-txt h3 span,.pprice,.pprice small{color:#8a6420!important}
+.stars{color:#a8761c!important}
+.why span{color:#fff!important}
+.badge2,.cat,.ab cite,cite{color:#74531a!important}
+.pf-num{color:#d9c79f}
+@media (max-width:860px){body.form-in-view .wa-float{opacity:0;pointer-events:none;transform:scale(.6);transition:.2s}}
