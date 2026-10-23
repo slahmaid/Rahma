@@ -146,3 +146,66 @@ select.qs{width:auto;padding:4px 6px;font-size:12px;font-weight:700;border:0}
 @media (max-width:1100px){.c-name .nm{max-width:150px}}
 @media (max-width:760px){.c-name .nm{max-width:60vw}}
 .drawer h2,.drawer .dname{overflow-wrap:anywhere}
+/* ===== motion & polish layer (restrained; transform/opacity only, no layout shift) ===== */
+:root{--ease:cubic-bezier(.22,1,.36,1)}
+.btn,.seg button,.side-nav a,.side-out,tbody tr,.kpi,.panel,select.qs{transition:background-color .2s,border-color .2s,color .2s,box-shadow .25s var(--ease),transform .25s var(--ease)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:focus-visible,.seg button:focus-visible,.side-nav a:focus-visible,.side-out:focus-visible,.lg-btn:focus-visible,.lg-link:focus-visible,.lg-eye:focus-visible,.x:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(31,58,46,.08)}
+tbody tr:hover{box-shadow:inset -3px 0 0 var(--gold)}
+/* sidebar sliding indicator */
+.side-nav{position:relative}
+.side-nav.has-ind a.on{border-right-color:transparent}
+.nav-ind{position:absolute;top:0;right:0;width:3px;background:var(--gold);opacity:0;pointer-events:none;transition:transform .35s var(--ease),height .35s var(--ease),opacity .2s}
+/* scrims fade instead of popping */
+.scrim,.dscrim{display:block;opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.scrim.on,.dscrim.on{opacity:1;visibility:visible;transition:opacity .3s}
+.side,.drawer{transition:transform .42s var(--ease)}
+/* status flash on updated row */
+@keyframes flash{0%{background-color:#f6e7c4}100%{background-color:transparent}}
+tr.flash>td{animation:flash 1.2s ease-out}
+/* toast exit */
+.toast{animation:tin .35s var(--ease)}
+@keyframes tin{from{transform:translateX(-24px);opacity:0}}
+.toast.out{opacity:0;transform:translateX(-24px);transition:opacity .25s,transform .25s}
+/* skeleton: tone */
+.sk{animation-duration:1.4s}
+/* login: square spinner + shake */
+.lg-btn.busy svg{display:none}
+.lg-btn.busy::before{content:"";width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:0!important;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:no-preference){
+ /* login entrance */
+ .login:not([hidden]) .lg-card{animation:lgCard .7s var(--ease) both}
+ .login:not([hidden]) .lg-art{animation:lgArt 1.4s var(--ease) .15s both}
+ .login:not([hidden]) .lg-form>*{animation:up .6s var(--ease) both}
+ .lg-form>:nth-child(1){animation-delay:.2s!important}.lg-form>:nth-child(2){animation-delay:.27s!important}.lg-form>:nth-child(3){animation-delay:.34s!important}
+ .lg-form>:nth-child(4){animation-delay:.41s!important}.lg-form>:nth-child(n+5){animation-delay:.48s!important}
+ @keyframes lgCard{from{opacity:0;transform:translateY(18px) scale(.985)}}
+ @keyframes lgArt{from{opacity:0;clip-path:inset(0 0 100% 0 round 32px);background-size:115%}to{clip-path:inset(0 0 0 0 round 32px)}}
+ .lg-form.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97)!important}
+ .lg-form.shake>*{animation:none!important}
+ @keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+ /* view transitions + staggers */
+ @keyframes up{from{opacity:0;transform:translateY(12px)}}
+ .view.fx-in>*{animation:up .5s var(--ease) both;animation-delay:calc(var(--i,0)*60ms)}
+ .view.fx-in .kpi{animation:up .5s var(--ease) both;animation-delay:calc(var(--k,0)*35ms)}
+ .view.fx-in .bars .bt span{animation:grow .9s var(--ease) .25s both;transform-origin:right}
+ @keyframes grow{from{transform:scaleX(0)}}
+ .view.fx-in .chart rect{animation:rise .7s var(--ease) .2s both;transform-box:fill-box;transform-origin:bottom}
+ @keyframes rise{from{transform:scaleY(0)}}
+ .view.fx-in .chart polyline{stroke-dasharray:3000;animation:draw 1.4s ease-out .35s both}
+ @keyframes draw{from{stroke-dashoffset:3000}to{stroke-dashoffset:0}}
+ .view.fx-rows tbody tr{animation:rowIn .45s var(--ease) both;animation-delay:calc(var(--r,0)*25ms)}
+ @keyframes rowIn{from{opacity:0;transform:translateY(6px)}}
+ .bulk{animation:up .3s var(--ease)}
+ /* drawer contents */
+ .fx-dr>.dr-sec{animation:up .5s var(--ease) both}
+ .fx-dr>.dr-sec:nth-child(2){animation-delay:.08s}.fx-dr>.dr-sec:nth-child(3){animation-delay:.13s}.fx-dr>.dr-sec:nth-child(4){animation-delay:.18s}.fx-dr>.dr-sec:nth-child(n+5){animation-delay:.23s}
+ .tline li{animation:up .4s var(--ease) both}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ .lg-btn.busy::before{animation:spin 1.5s linear infinite!important}
+ .kpi:hover{transform:none}
+}

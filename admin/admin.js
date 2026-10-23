@@ -21,6 +21,35 @@ let TOKEN = localStorage.getItem(LS_TOK) || sessionStorage.getItem(LS_TOK) || ''
 const st = {orders: [], meta: null, loaded: false, loading: false, error: null, known: null, lastSync: null,
   f: {q:'', status:'', from:'', to:'', product:'', city:'', sort:'new', page:1, per:20}, sel: new Set(), days: 14, view: 'dashboard', drawerId: null};
 let timer = null;
+// ---------- motion helpers (pure enhancement; everything works without them) ----------
+const RM = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : {matches: false};
+let FX = '';
+const restart = (el, c) => { if (!el) return; el.classList.remove(c); void el.offsetWidth; el.classList.add(c); };
+function countUp(root) {
+  if (RM.matches) return;
+  root.querySelectorAll('.kpi b').forEach(b => {
+    const txt = b.textContent, m = txt.match(/^([\d,]+)(.*)$/s); if (!m) return;
+    const end = +m[1].replace(/,/g, ''); if (!end) return;
+    const t0 = performance.now(), D = 700;
+    const step = t => { if (!b.isConnected) return; const p = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - p, 3);
+      b.textContent = p < 1 ? Math.round(end * e).toLocaleString('en-US') + m[2] : txt; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+function applyFx() {
+  const k = FX; FX = ''; if (!k) return; const v = $('#view');
+  if (k === 'view') { [...v.children].forEach((c, i) => c.style.setProperty('--i', Math.min(i, 8))); $$('#view .kpi').forEach((c, i) => c.style.setProperty('--k', Math.min(i, 11))); restart(v, 'fx-in'); if (st.loaded) countUp(v); }
+  $$('#view tbody tr').forEach((tr, i) => tr.style.setProperty('--r', Math.min(i, 14)));
+  restart(v, 'fx-rows');
+}
+function flash(ids) { requestAnimationFrame(() => [].concat(ids).forEach(id => { const tr = document.querySelector(`#otbl tr[data-id="${CSS.escape(id)}"]`); if (tr) restart(tr, 'flash'); })); }
+let lastFocus = null;
+function navInd() {
+  const nav = $('#nav'), a = nav.querySelector('a.on'); let ind = nav.querySelector('.nav-ind');
+  if (!ind) { ind = document.createElement('span'); ind.className = 'nav-ind'; ind.setAttribute('aria-hidden', 'true'); nav.appendChild(ind); nav.classList.add('has-ind'); }
+  if (a) { ind.style.transform = `translateY(${a.offsetTop}px)`; ind.style.height = a.offsetHeight + 'px'; ind.style.opacity = 1; } else ind.style.opacity = 0;
+}
+window.addEventListener('resize', () => { if (!$('#app').hidden) navInd(); });
 
 // ---------- utils ----------
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
@@ -35,7 +64,7 @@ const badge = k => `<span class="st st-${esc(k)}">${esc(stLabel(k))}</span>`;
 const localPhone = p => { const d = String(p || '').replace(/\D/g, ''); return d.length >= 9 ? '0' + d.slice(-9) : String(p || ''); };
 const waNum = p => '212' + String(p || '').replace(/\D/g, '').slice(-9);
 const fill = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => k === 'total' ? num(o.total) : k === 'phone' ? localPhone(o.phone) : (o[k] ?? ''));
-function toast(msg, err) { const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg; const box = $('#toasts'); box.appendChild(t); while (box.children.length > 3) box.firstChild.remove(); setTimeout(() => t.remove(), 4000); }
+function toast(msg, err) { const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg; const box = $('#toasts'); box.appendChild(t); while (box.children.length > 3) box.firstChild.remove(); setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), RM.matches ? 0 : 260); }, 4000); }
 function beep() { if (!S.sound) return; try { const a = new (window.AudioContext || window.webkitAudioContext)(); [0, .18].forEach(t => { const o = a.createOscillator(), g = a.createGain(); o.frequency.value = 880; g.gain.setValueAtTime(.15, a.currentTime + t); g.gain.exponentialRampToValueAtTime(.001, a.currentTime + t + .15); o.connect(g).connect(a.destination); o.start(a.currentTime + t); o.stop(a.currentTime + t + .16); }); } catch (e) {} }
 
 // ---------- API ----------
@@ -56,7 +85,7 @@ const errMsg = e => e.code === 'unauthorized' ? 'رمز الدخول غير صح
 
 async function loadAll(silent) {
   if (st.loading) return;
-  st.loading = true; if (!silent) { st.error = null; render(); }
+  st.loading = true; if (!silent) { st.error = null; FX = 'view'; render(); }
   try {
     if (!st.meta) st.meta = await api('meta');
     let page = 1, all = [];
@@ -73,7 +102,7 @@ async function loadAll(silent) {
   } catch (e) {
     if (e.code === 'unauthorized') { logout(true); return; }
     st.error = e; if (silent) toast(errMsg(e), true);
-  } finally { st.loading = false; render(); updateBadge(); }
+  } finally { st.loading = false; if (!silent) FX = 'view'; render(); updateBadge(); }
 }
 function updateBadge() {
   const n = st.orders.filter(o => o.statusKey === 'new').length;
@@ -93,15 +122,15 @@ $('#lgf').addEventListener('submit', async ev => {
   ev.preventDefault();
   const tok = $('#lg-token').value.trim(), url = $('#lg-url').value.trim() || DEFAULT_URL, btn = $('#lg-btn');
   if (!/^https:\/\//.test(url)) return showLogin('رابط الـ API غير صالح.');
-  btn.disabled = true; btn.querySelector('.lg-btn-t').textContent = 'جارٍ التحقق...';
+  btn.disabled = true; btn.classList.add('busy'); btn.setAttribute('aria-busy', 'true'); btn.querySelector('.lg-btn-t').textContent = 'جارٍ التحقق...';
   try {
     const meta = await api('meta', {}, url, tok);
     TOKEN = tok; S.url = url; saveSettings(); st.meta = meta;
     localStorage.removeItem(LS_TOK); sessionStorage.removeItem(LS_TOK);
     ($('#lg-remember').checked ? localStorage : sessionStorage).setItem(LS_TOK, tok);
     $('#lg-token').value = ''; start(); toast('مرحباً بك 👋');
-  } catch (e) { showLogin(errMsg(e)); }
-  finally { btn.disabled = false; btn.querySelector('.lg-btn-t').textContent = 'دخول'; }
+  } catch (e) { showLogin(errMsg(e)); if (!RM.matches) restart($('#lgf'), 'shake'); }
+  finally { btn.disabled = false; btn.classList.remove('busy'); btn.removeAttribute('aria-busy'); btn.querySelector('.lg-btn-t').textContent = 'دخول'; }
 });
 function logout(expired) {
   TOKEN = ''; localStorage.removeItem(LS_TOK); sessionStorage.removeItem(LS_TOK); clearInterval(timer);
@@ -119,7 +148,7 @@ function route() {
   const v = (location.hash.match(/^#\/(\w+)/) || [])[1];
   st.view = TITLES[v] ? v : 'dashboard';
   $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.v === st.view));
-  $('#title').textContent = TITLES[st.view]; closeSide(); render();
+  $('#title').textContent = TITLES[st.view]; closeSide(); FX = 'view'; render(); navInd();
 }
 window.addEventListener('hashchange', route);
 const closeSide = () => { $('#side').classList.remove('on'); $('#scrim').classList.remove('on'); };
@@ -132,7 +161,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeDrawer();
 });
 
-function render() {
+function render() { renderCore(); applyFx(); }
+function renderCore() {
   if ($('#app').hidden) return;
   const v = $('#view');
   if (st.view === 'settings') return v.innerHTML = vSettings(), bindSettings();
@@ -227,15 +257,15 @@ function vOrders() {
   : `<div class="empty"><h3>${st.orders.length ? 'لا توجد طلبات مطابقة' : 'لا توجد طلبات بعد'}</h3><p>${st.orders.length ? 'جرّب تعديل البحث أو الفلاتر.' : 'ستظهر الطلبات هنا فور وصولها من المتجر.'}</p>${st.orders.length ? '<button class="btn pri" id="e-reset">مسح الفلاتر</button>' : ''}</div>`}`;
 }
 function bindOrders() {
-  const f = st.f, re = () => { f.page = 1; render(); };
+  const f = st.f, re = () => { f.page = 1; FX = 'rows'; render(); };
   const q = $('#f-q'); let tmo;
-  q.oninput = () => { clearTimeout(tmo); tmo = setTimeout(() => { f.q = q.value; f.page = 1; const pos = q.selectionStart; render(); const n = $('#f-q'); n.focus(); n.setSelectionRange(pos, pos); }, 250); };
+  q.oninput = () => { clearTimeout(tmo); tmo = setTimeout(() => { f.q = q.value; f.page = 1; FX = 'rows'; const pos = q.selectionStart; render(); const n = $('#f-q'); n.focus(); n.setSelectionRange(pos, pos); }, 250); };
   [['status'], ['product'], ['city'], ['from'], ['to'], ['sort']].forEach(([k]) => { const el = $('#f-' + k); el.onchange = () => { f[k] = el.value; re(); }; });
-  const reset = () => { Object.assign(f, {q:'', status:'', from:'', to:'', product:'', city:'', sort:'new', page:1}); render(); };
+  const reset = () => { Object.assign(f, {q:'', status:'', from:'', to:'', product:'', city:'', sort:'new', page:1}); FX = 'rows'; render(); };
   $('#f-reset').onclick = reset; const er = $('#e-reset'); if (er) er.onclick = reset;
   $('#x-csv').onclick = () => exportFile('csv'); $('#x-xls').onclick = () => exportFile('xls'); $('#x-print').onclick = printList;
   $$('th.sortable').forEach(th => th.onclick = () => { f.sort = th.dataset.s === f.sort && f.sort === 'new' ? 'old' : th.dataset.s; re(); });
-  const pv = $('#pg-prev'), nx = $('#pg-next'); if (pv) { pv.onclick = () => { f.page--; render(); }; nx.onclick = () => { f.page++; render(); }; }
+  const pv = $('#pg-prev'), nx = $('#pg-next'); if (pv) { pv.onclick = () => { f.page--; FX = 'rows'; render(); }; nx.onclick = () => { f.page++; FX = 'rows'; render(); }; }
   const sa = $('#sel-all'); if (sa) sa.onchange = () => { $$('#otbl tbody tr').forEach(tr => sa.checked ? st.sel.add(tr.dataset.id) : st.sel.delete(tr.dataset.id)); render(); };
   $$('#otbl tbody tr').forEach(tr => {
     const id = tr.dataset.id;
@@ -250,7 +280,7 @@ function bindOrders() {
       const s = $('#b-st').value; if (!s) return toast('اختر الحالة أولاً', true);
       if (!confirm(`تغيير حالة ${st.sel.size} طلب إلى "${stLabel(s)}"؟`)) return;
       const btn = $('#b-go'); btn.disabled = true;
-      try { const r = await post({action: 'bulkStatus', ids: [...st.sel], status: s}); r.ids.forEach(id => { const o = st.orders.find(x => x.id === id); if (o) { o.statusKey = s; o.status = stLabel(s); } }); toast(`تم تحديث ${r.updated} طلب`); st.sel.clear(); render(); updateBadge(); }
+      try { const r = await post({action: 'bulkStatus', ids: [...st.sel], status: s}); r.ids.forEach(id => { const o = st.orders.find(x => x.id === id); if (o) { o.statusKey = s; o.status = stLabel(s); } }); toast(`تم تحديث ${r.updated} طلب`); st.sel.clear(); render(); updateBadge(); flash(r.ids); }
       catch (e) { toast(errMsg(e), true); btn.disabled = false; }
     };
     $('#b-clear').onclick = () => { st.sel.clear(); render(); };
@@ -258,12 +288,12 @@ function bindOrders() {
   }
 }
 async function changeStatus(id, s) {
-  try { const r = await post({action: 'updateStatus', id, status: s}); replaceOrder(r.order); toast(`${id}: ${stLabel(s)}`); render(); updateBadge(); if (st.drawerId === id) openDrawer(id); }
+  try { const r = await post({action: 'updateStatus', id, status: s}); replaceOrder(r.order); toast(`${id}: ${stLabel(s)}`); render(); updateBadge(); flash(id); if (st.drawerId === id) openDrawer(id); }
   catch (e) { toast(errMsg(e), true); render(); }
 }
 
 // ---------- drawer ----------
-function closeDrawer() { st.drawerId = null; $('#drawer').classList.remove('on'); $('#dscrim').classList.remove('on'); $('#drawer').setAttribute('aria-hidden', 'true'); }
+function closeDrawer() { const was = $('#drawer').classList.contains('on'); $('#drawer').inert = true; if (was && lastFocus && lastFocus.isConnected) lastFocus.focus(); st.drawerId = null; $('#drawer').classList.remove('on'); $('#dscrim').classList.remove('on'); $('#drawer').setAttribute('aria-hidden', 'true'); }
 $('#dscrim').onclick = closeDrawer;
 const FIELD_AR = {status:'الحالة', notes:'الملاحظات', name:'الاسم', phone:'الهاتف', city:'المدينة', address:'العنوان', qty:'الكمية', productId:'رمز المنتج', product:'المنتج', unitPrice:'سعر الوحدة', total:'المجموع', delivery:'التوصيل'};
 const BY_AR = {website:'المتجر', admin:'لوحة التحكم', sheet:'الجدول'};
@@ -285,6 +315,8 @@ async function openDrawer(id) {
    <div class="full"><label>العنوان</label><input name="address" value="${esc(o.address || '')}"></div>
    <div class="full"><button class="btn pri" type="submit">حفظ التعديلات</button><p class="note-s">يُعاد حساب المجموع على الخادم حسب الأسعار في Code.gs.</p></div></form></details></div>
   <div class="dr-sec"><h4>سجل التغييرات</h4><div id="dr-hist"><div class="sk sk-line"></div><div class="sk sk-line"></div></div></div>`;
+  const wasOpen = $('#drawer').classList.contains('on'); $('#drawer').inert = false;
+  if (!wasOpen) { lastFocus = document.activeElement; restart($('#dr'), 'fx-dr'); setTimeout(() => { const x = $('#dr-x'); x && x.focus({preventScroll: true}); }, 30); }
   $('#drawer').classList.add('on'); $('#dscrim').classList.add('on'); $('#drawer').setAttribute('aria-hidden', 'false');
   $('#dr-x').onclick = closeDrawer;
   $('#dr-copy').onclick = async () => { const p = localPhone(o.phone); try { await navigator.clipboard.writeText(p); } catch (e) { const t = document.createElement('textarea'); t.value = p; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); } toast('تم نسخ الرقم ' + p); };
@@ -388,5 +420,6 @@ function bindSettings() {
 // expose for tests/debug (no secrets)
 window.__sahabyAdmin = {st, S};
 // ---------- boot ----------
+$('#drawer').inert = true;
 if (TOKEN) start(); else showLogin();
 })();
