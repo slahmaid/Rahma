@@ -198,7 +198,17 @@ html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 .f-col:last-child span{justify-content:center;padding:5px 0;font-size:15px}
 .f-wa{display:block;width:100%;text-align:center;margin-top:16px;padding:14px}
 }
-html{scroll-padding-top:100px;scroll-behavior:smooth}.nav a.on,.mobile-menu a.on{color:#b8862b}.f-col a.ct{display:flex;align-items:center;gap:8px}.see-all{color:#b8862b;font-weight:700;text-decoration:none}.see-all:hover{color:#1f3a2e}a.p-img{text-decoration:none}</style>
+html{scroll-padding-top:100px;scroll-behavior:smooth}.nav a.on,.mobile-menu a.on{color:#b8862b}.f-col a.ct{display:flex;align-items:center;gap:8px}.see-all{color:#b8862b;font-weight:700;text-decoration:none}.see-all:hover{color:#1f3a2e}a.p-img{text-decoration:none}@media(min-width:1024px){
+.slider{height:calc(100vh - var(--hh,84px));height:calc(100svh - var(--hh,84px));margin:0 auto;padding:clamp(14px,2.5vh,28px) 48px 0;display:flex;flex-direction:column;box-sizing:border-box}
+.slider .track{flex:1 1 auto;min-height:0;aspect-ratio:auto}
+.slide{padding:0 clamp(48px,6vw,88px)}
+.slide h2{font-size:clamp(34px,5.2vh,56px);margin-bottom:clamp(8px,1.4vh,16px)}
+.slide p{font-size:clamp(15px,2.1vh,19px);margin-bottom:clamp(16px,3vh,32px)}
+.badge{margin-bottom:clamp(10px,2vh,20px)}
+.btn-main{padding:clamp(11px,1.8vh,16px) 38px}
+.dots{flex:0 0 auto;margin:0;padding:clamp(10px,2vh,18px) 0}
+}
+</style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "صحابي", "alternateName": "Sahaby", "url": "https://sahaby.ma/", "logo": "https://sahaby.ma/assets/icon-512.png", "email": "contact@sahaby.ma", "telephone": "+212600000000", "address": {"@type": "PostalAddress", "addressCountry": "MA"}, "sameAs": ["https://instagram.com/sahaby", "https://facebook.com/sahaby", "https://tiktok.com/@sahaby"]}</script>
 <link rel="stylesheet" href="assets/site.css">
 </head>
@@ -215,6 +225,7 @@ html{scroll-padding-top:100px;scroll-behavior:smooth}.nav a.on,.mobile-menu a.on
   <a href="products.html" class="cta">اكتشف الآن</a>
 </header>
 <nav class="mobile-menu" id="mm"><a href="products.html">المنتجات</a><a href="#contact">اتصل بنا</a><a href="about.html">من نحن</a></nav>
+<script>(function(){var h=document.querySelector('.header');function f(){document.documentElement.style.setProperty('--hh',h.offsetHeight+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();</script>
 <section tabindex="-1" class="slider" id="slider">
   <div class="track">
     <div class="slide s1"><div class="slide-content"><span class="badge">✦ تشكيلة جديدة 2026</span><h2>تسوّق بأناقة،<br>واكتشف <span>ما يليق بك</span></h2><p>منتجات مختارة بعناية تجمع بين الجودة والذوق الرفيع.</p><a href="products.html" class="btn-main">تسوّق الآن</a></div></div>
@@ -241,7 +252,7 @@ html{scroll-padding-top:100px;scroll-behavior:smooth}.nav a.on,.mobile-menu a.on
     <div class="f-col"><h4>الأقسام</h4><a href="products.html?cat=mushaf">القرآن الكريم</a><a href="products.html?cat=tafsir">التفاسير</a><a href="products.html?cat=packs">الباقات</a></div>
     <div class="f-col" id="contact"><h4>تواصل معنا</h4><a href="tel:+212600000000" class="ct"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><bdi>0600-000000</bdi></a><a href="mailto:contact@sahaby.ma" class="ct"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14"/><path d="M3 7l9 6 9-6"/></svg><bdi>contact@sahaby.ma</bdi></a><span><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>المغرب</span><a href="https://wa.me/212600000000?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D8%B5%D8%AD%D8%A7%D8%A8%D9%8A" target="_blank" rel="noopener" class="f-wa">راسلنا على واتساب</a></div>
   </div>
-  <div class="f-bottom"><span>© 2026 صحابي. جميع الحقوق محفوظة.</span><span class="pay">💵 الدفع عند الاستلام · 🚚 توصيل لجميع المدن</span></div>
+  <div class="f-bottom"><span>© 2026 صحابي. جميع الحقوق محفوظة.</span><span class="pay">الدفع عند الاستلام · توصيل لجميع المدن</span></div>
 </footer>
 <a href="https://wa.me/212600000000?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D8%B5%D8%AD%D8%A7%D8%A8%D9%8A" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/></svg></a>
 <script>
@@ -261,5 +272,10 @@ let x0=null;sl.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;paused=
 go(0)})();
 </script>
 <script src="assets/site.js" defer></script>
+<link rel="stylesheet" href="assets/motion.css">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="assets/motion.js" defer></script>
 </body>
 </html>

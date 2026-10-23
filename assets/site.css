@@ -63,3 +63,5 @@ body.pp-page .to-top{bottom:calc(84px + env(safe-area-inset-bottom))}
 .badge2,.cat,.ab cite,cite{color:#74531a!important}
 .pf-num{color:#d9c79f}
 @media (max-width:860px){body.form-in-view .wa-float{opacity:0;pointer-events:none;transform:scale(.6);transition:.2s}}
+/* fix: valid fields (.fld.ok) were hidden by the success-panel .ok rule */
+.fld.ok{display:block!important;padding:0!important;text-align:inherit!important}

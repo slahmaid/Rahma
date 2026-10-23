@@ -1,0 +1,57 @@
+/* Sahaby motion layer: progressive enhancement. Content is only hidden while html.js-motion is set. */
+.scroll-prog{position:fixed;top:0;right:0;left:0;height:2px;background:#b8862b;transform:scaleX(0);transform-origin:100% 50%;z-index:60;pointer-events:none}
+.header{transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .3s,background-color .3s}
+.header.scrolled{background:rgba(255,255,255,.88)!important;-webkit-backdrop-filter:saturate(1.4) blur(10px);backdrop-filter:saturate(1.4) blur(10px)}
+.header.hide{transform:translateY(-100%)}
+/* intro */
+.intro{position:fixed;inset:0;z-index:300;background:#f7f3ea;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;cursor:pointer}
+.intro b{font-family:'DecoType Thuluth','Aref Ruqaa',serif;font-weight:400;font-size:clamp(56px,9vw,110px);color:#1f3a2e;line-height:1.2;clip-path:inset(0 0 0 100%)}
+.intro i{display:block;width:120px;height:1px;background:#b8862b;transform:scaleX(0)}
+.intro small{font-size:12px;color:#8a6420;letter-spacing:.05em}
+/* reveals */
+html.js-motion [data-rv]{opacity:0}
+html.js-motion .slide-content>*{opacity:0}
+/* hero ken burns */
+.slide{isolation:isolate}
+.kb{position:absolute;inset:0;z-index:-1;background:inherit;background-size:cover;background-position:center;will-change:transform;animation:kb 18s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.09) translate3d(-1%,-1%,0)}}
+/* cards */
+.p-card{transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .5s}
+.p-card .p-img{overflow:hidden}
+.p-card .p-img>*{transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+@media(hover:hover){.p-card:hover{transform:translateY(-6px);box-shadow:0 22px 44px -18px rgba(31,58,46,.35)}
+.p-card:hover .p-img>*{transform:scale(1.06)}
+.p-card .add{position:relative;overflow:hidden}
+.p-card .add::after{content:"←";display:inline-block;margin-right:6px;transform:translateX(6px);opacity:0;transition:.35s}
+.p-card:hover .add::after{transform:none;opacity:1}}
+.fx-img,.ab-img,.rv-img{overflow:hidden}
+.fx-img img,.ab-img img{will-change:transform}
+/* buttons */
+.btn-main,.fx-btn,.cta,.submit,.add{transition:transform .35s cubic-bezier(.2,.7,.2,1),background-color .25s,color .25s,box-shadow .3s}
+/* form */
+.fld input,.fld select,.fld textarea{transition:border-color .25s,box-shadow .25s,background-color .25s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:#b8862b!important;box-shadow:0 2px 0 0 #b8862b;background:#fffdf8}
+.fld label{transition:color .25s}.fld:focus-within label{color:#8a6420}
+.submit:disabled{position:relative;color:transparent!important}
+.submit:disabled::after{content:"";position:absolute;top:50%;left:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#gm>*{animation:gfade .5s ease both}
+@keyframes gfade{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:none}}
+/* page transition */
+.pt{position:fixed;inset:0;background:#f7f3ea;z-index:250;pointer-events:none;opacity:0;transition:opacity .35s ease}
+.pt.on{opacity:1}
+/* thank-you success */
+.ty-top>:first-child{animation:tyPop .8s cubic-bezier(.2,1.5,.4,1) .15s both;box-shadow:0 0 0 0 rgba(184,134,43,.5)}
+.ty-top>:first-child::after{content:"";position:absolute}
+.ty-top>:first-child{position:relative}
+.ty-top>:first-child{animation:tyPop .8s cubic-bezier(.2,1.5,.4,1) .15s both,tyRing 1.6s ease-out 1s 2}
+.ty-top h1,.ty-top>p{animation:tyUp .8s cubic-bezier(.2,.7,.2,1) .5s both}
+@keyframes tyPop{from{transform:scale(.3) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes tyRing{from{box-shadow:0 0 0 0 rgba(184,134,43,.55)}to{box-shadow:0 0 0 22px rgba(184,134,43,0)}}
+@keyframes tyUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){
+*,*::before,*::after{animation:none!important;transition:none!important}
+html.js-motion [data-rv],html.js-motion .slide-content>*{opacity:1!important}
+.intro,.pt{display:none!important}}
+.fbar{transition:top .45s cubic-bezier(.2,.7,.2,1)}body:has(.header.hide) .fbar{top:0!important}
+html.sh-lenis,html.lenis,html.lenis body{scroll-behavior:auto!important}
