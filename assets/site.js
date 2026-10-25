@@ -29,6 +29,9 @@
   addEventListener('scroll', onScroll, {passive: true}); onScroll();
 })();
 
+/* Offer links carry ?promo=CODE; remember it for this visit so the order form can apply it */
+(function(){try{var c=new URLSearchParams(location.search).get('promo');if(c)sessionStorage.setItem('sahaby_promo',c.replace(/\s/g,'').toUpperCase().slice(0,30))}catch(e){}})();
+
 /* QA: keep the WhatsApp float from covering the COD form on mobile */
 (function(){if(!('IntersectionObserver' in window))return;var t=setInterval(function(){var f=document.getElementById('f');if(!f)return;clearInterval(t);
  new IntersectionObserver(function(e){document.body.classList.toggle('form-in-view',e[0].isIntersecting)},{rootMargin:'-10% 0px -10% 0px'}).observe(f)},300);setTimeout(function(){clearInterval(t)},8000)})();

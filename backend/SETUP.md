@@ -45,6 +45,23 @@ The URL stays the same. (Creating a *New deployment* instead would give a new UR
 
 Prices live in `PRODUCTS` inside `Code.gs`. When you change a price on the site, change it there too and redeploy. The server always recalculates totals from this list.
 
+### Promo codes
+Codes live in `PROMOS` inside `Code.gs`. Today there is one:
+
+```js
+'SAHABY30': { pct: 30, firstOrder: true, active: true }
+```
+
+- `pct`: the percent taken off the order (unit price × quantity), rounded to the nearest dirham.
+- `firstOrder`: the code is refused when the phone number already has an order that was not cancelled.
+- `active: false`: stops new orders from using the code. Orders that already used it keep their discount if you edit them.
+
+The **المجموع** column is the amount to collect, after the discount. The discount itself is in **الخصم**, and the code in **كود الخصم**.
+Free delivery still uses the price *before* the discount, so a 200-dirham order with SAHABY30 stays free to deliver.
+
+The order form keeps its own copy of the codes in `product.html` (`const PROMOS={SAHABY30:30}`), but only to show the discount. When you add, change or remove a code, update both files and redeploy. The server checks every order either way.
+Offer links can carry the code, e.g. `products.html?promo=SAHABY30`; the order form then fills it in.
+
 ---
 
 ## Admin API
@@ -55,7 +72,7 @@ POST bodies are JSON sent as `Content-Type: text/plain`, which avoids the CORS p
 | Call | Description |
 |---|---|
 | `GET /exec` | Health check: `{ok, service, version}` |
-| `POST /exec` `{productId, qty, name, phone, city, source?, notes?, website?}` | Creates an order and returns `{ok, orderId, total, delivery}`. Errors: `validation` (+ `fields`), `bad_json`. A duplicate (same phone + product within 2 min) returns `{ok, duplicate:true, orderId}`. `website` is the honeypot and must be empty. |
+| `POST /exec` `{productId, qty, name, phone, city, promo?, source?, notes?, website?}` | Creates an order and returns `{ok, orderId, subtotal, discount, promo, total, delivery}`. Errors: `validation` (+ `fields`), `promo` (+ `reason`: `invalid` for an unknown or inactive code, `used` when the code is first-order only and the phone has ordered before), `bad_json`. A duplicate (same phone + product within 2 min) returns `{ok, duplicate:true, orderId}`. `website` is the honeypot and must be empty. |
 
 ### Admin (token required)
 | Call | Description |
@@ -68,7 +85,7 @@ POST bodies are JSON sent as `Content-Type: text/plain`, which avoids the CORS p
 | `POST {action:"updateNote", token, id, note}` | Replaces the note |
 | `POST {action:"delete", token, id}` | Soft delete: status becomes `ملغى` and a `[محذوف …]` tag is added to the notes |
 | `POST {action:"bulkStatus", token, ids:[…], status}` *(v1.1)* | Updates up to 500 orders → `{updated, ids, missing}` |
-| `POST {action:"updateOrder", token, id, fields:{name?, phone?, city?, address?, qty?, productId?}}` *(v1.1)* | Edits the order. Product, unit price, total and delivery are recalculated on the server |
+| `POST {action:"updateOrder", token, id, fields:{name?, phone?, city?, address?, qty?, productId?}}` *(v1.1)* | Edits the order. Product, unit price, discount, total and delivery are recalculated on the server, keeping the order's promo code |
 | `GET ?action=history&id=…&token=T` *(v1.1)* | Change log `[{at, field, from, to, by}]`, also returned by `get` |
 | `GET ?action=stats&days=14&token=T` *(v1.1)* | Adds a `series` of `[{date, orders, revenue, delivered}]` |
 
@@ -76,8 +93,8 @@ Every POST may include `by` (who made the change), which is written to the **His
 `list` also accepts `productId` and `city` filters, and `pageSize` up to 500.
 
 Order object keys (stable, from the hidden row 1):
-`id, createdAt, name, phone, city, product, productId, qty, unitPrice, total, delivery, status, notes, source, updatedAt`,
-plus `statusKey` and `_row`.
+`id, createdAt, name, phone, city, product, productId, qty, unitPrice, total, delivery, status, notes, source, updatedAt, address, promo, discount`,
+plus `statusKey` and `_row`. `promo` and `discount` are empty when no code was used.
 
 Status keys: `new` جديد · `confirmed` مؤكد · `shipping` قيد الشحن · `delivered` تم التسليم · `cancelled` ملغى · `no_answer` لا يجيب.
 
@@ -87,6 +104,11 @@ Status keys: `new` جديد · `confirmed` مؤكد · `shipping` قيد الش�
 1. Replace all of `Code.gs` with the new version and click **Save**.
 2. **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**. The URL stays the same.
 3. You do **not** need to run `setup()` again. On the first request, the script adds the new **العنوان / address** column and creates the **History** sheet by itself. Doing this again changes nothing.
+
+## Upgrading v1.1 → v1.2 (promo codes)
+1. Replace all of `Code.gs` with the new version and click **Save**.
+2. **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy**. The URL stays the same.
+3. You do **not** need to run `setup()` again. On the first request, the script adds the **كود الخصم / promo** and **الخصم / discount** columns at the end of **Orders**. Existing orders are unchanged.
 
 ## Admin panel
 Open `admin/index.html`, paste the `ADMIN_TOKEN`, and keep the default API URL, which can be changed in Settings.

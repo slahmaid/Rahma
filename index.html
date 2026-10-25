@@ -13,202 +13,6 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Cairo',sans-serif;background:#f7f5f0}
-.header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:20px 48px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.06);direction:ltr}
-.nav{justify-self:start;display:flex;gap:32px;list-style:none;direction:rtl}
-.nav a{text-decoration:none;color:#222;font-weight:600;font-size:17px;transition:color .2s}
-.nav a:hover{color:#b8862b}
-.logo{font-family:'DecoType Thuluth','DecoType Thuluth II','Aref Ruqaa',serif;font-size:44px;color:#1f3a2e;text-decoration:none;line-height:1}
-.cta{justify-self:end;font-family:'Cairo',sans-serif;font-weight:700;font-size:16px;color:#fff;background:#1f3a2e;padding:12px 28px;;text-decoration:none;transition:background .2s}
-.cta:hover{background:#b8862b}
-.badge{display:inline-block;background:#efe4cc;color:#8a6420;font-weight:600;font-size:14px;padding:6px 16px;;margin-bottom:20px}
-.btn-main{font-weight:700;font-size:18px;color:#fff;background:#1f3a2e;padding:16px 40px;;text-decoration:none;box-shadow:0 8px 24px rgba(31,58,46,.25);transition:all .2s}
-.btn-main:hover{background:#b8862b;transform:translateY(-2px)}
-.burger{display:none;justify-self:start;background:none;border:0;width:40px;height:40px;cursor:pointer;flex-direction:column;justify-content:center;gap:6px}
-.burger span{display:block;height:2px;width:24px;background:#1f3a2e;;transition:.3s}
-.burger.open span:nth-child(1){transform:translateY(8px) rotate(45deg)}
-.burger.open span:nth-child(2){opacity:0}
-.burger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
-.mobile-menu{display:none}
-@media(max-width:860px){
-.header{padding:14px 18px;position:sticky;top:0;z-index:10}
-.nav{display:none}.burger{display:flex}
-.logo{font-size:32px}
-.cta{padding:9px 16px;font-size:13px}
-.mobile-menu{display:block;max-height:0;overflow:hidden;background:#fff;transition:max-height .35s ease;box-shadow:0 8px 16px rgba(0,0,0,.06);position:sticky;top:68px;z-index:9}
-.mobile-menu.open{max-height:300px}
-.mobile-menu a{display:block;padding:16px 24px;text-align:right;text-decoration:none;color:#1f3a2e;font-weight:600;font-size:17px;border-top:1px solid #f0ece3}
-}
-.slider{position:relative;max-width:1280px;margin:32px auto;padding:0 48px}
-.slider .track{display:flex;overflow:hidden;;aspect-ratio:16/7;direction:ltr}
-.slide{flex:0 0 100%;position:relative;display:flex;align-items:center;justify-content:flex-start;padding:0 88px;overflow:hidden;transition:transform .6s ease;direction:rtl}
-.slide{background-size:cover;background-position:center}.s1{background-image:url(img/s1-desktop.jpg);background-image:image-set(url(img/s1-desktop.webp) type("image/webp"),url(img/s1-desktop.jpg) type("image/jpeg"))}.s2{background-image:url(img/s2-desktop.jpg);background-image:image-set(url(img/s2-desktop.webp) type("image/webp"),url(img/s2-desktop.jpg) type("image/jpeg"))}.s3{background-image:url(img/s3-desktop.jpg);background-image:image-set(url(img/s3-desktop.webp) type("image/webp"),url(img/s3-desktop.jpg) type("image/jpeg"))}
-.slide::before{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(0,0,0,.6) 0%,rgba(0,0,0,.25) 45%,transparent 70%)}
-.s2 h2 span{color:#f1d08a}
-.art{position:absolute;left:8%;top:50%;transform:translateY(-50%);font-family:'DecoType Thuluth','Aref Ruqaa',serif;font-size:170px;color:rgba(255,255,255,.9)}
-.slide-content{position:relative;z-index:2;max-width:520px;text-align:right;color:#fff}
-.badge{display:inline-block;background:rgba(255,255,255,.18);color:#fff;font-weight:600;font-size:14px;padding:6px 16px;;margin-bottom:18px}
-.slide h2{font-size:48px;font-weight:700;line-height:1.35;margin-bottom:14px}
-.slide h2 span{color:#f1d08a}
-.slide p{font-size:18px;line-height:1.8;opacity:.9;margin-bottom:28px}
-.btn-main{display:inline-block;font-weight:700;font-size:17px;color:#1f3a2e;background:#fff;padding:15px 38px;;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .2s}
-.btn-main:hover{background:#f1d08a;transform:translateY(-2px)}
-.arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;;border:0;background:#fff;color:#1f3a2e;font-size:28px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:3}
-.prev{right:24px}.next{left:24px}
-.dots{display:flex;justify-content:center;gap:8px;margin-top:18px}
-.dots button{width:10px;height:10px;;border:0;background:#cfc8b8;cursor:pointer;transition:.3s}
-.dots button.on{width:28px;background:#1f3a2e}
-@media(max-width:860px){
-.slider{padding:0 16px;margin:16px auto}
-.slider .track{aspect-ratio:9/14;}
-.s1{background-image:url(img/s1-mobile.jpg);background-image:image-set(url(img/s1-mobile.webp) type("image/webp"),url(img/s1-mobile.jpg) type("image/jpeg"))}.s2{background-image:url(img/s2-mobile.jpg);background-image:image-set(url(img/s2-mobile.webp) type("image/webp"),url(img/s2-mobile.jpg) type("image/jpeg"))}.s3{background-image:url(img/s3-mobile.jpg);background-image:image-set(url(img/s3-mobile.webp) type("image/webp"),url(img/s3-mobile.jpg) type("image/jpeg"))}
-.slide::before{background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.35) 45%,transparent 65%)}
-.slide{align-items:flex-end;justify-content:center;padding:0 22px 40px}
-.art{left:50%;top:17%;transform:translate(-50%,-50%);font-size:80px}
-.slide-content{text-align:center}
-.slide h2{font-size:30px}.slide p{font-size:15px;margin-bottom:22px}
-.badge{font-size:12px;margin-bottom:12px}
-.btn-main{width:100%;padding:15px}
-.arrow{display:none}
-}
-.features{max-width:1184px;margin:8px auto 48px;display:grid;grid-template-columns:repeat(3,1fr);background:#fff;;box-shadow:0 6px 24px rgba(0,0,0,.05);direction:rtl}
-.feature{display:flex;align-items:center;gap:16px;padding:26px 32px;justify-content:center}
-.feature+.feature{border-right:1px solid #efe9dd}
-.f-icon{flex:0 0 56px;height:56px;;background:#efe4cc;color:#1f3a2e;display:flex;align-items:center;justify-content:center}
-.f-icon svg{width:28px;height:28px}
-.feature h3{font-size:18px;font-weight:700;color:#1f3a2e;margin-bottom:2px}
-.feature p{font-size:14px;color:#666}
-@media(max-width:860px){.features{margin:4px 16px 32px;grid-template-columns:1fr;}.feature{justify-content:flex-start;padding:18px 22px}.feature+.feature{border-right:0;border-top:1px solid #efe9dd}.f-icon{flex-basis:48px;height:48px}}
-.products{max-width:1184px;margin:0 auto 64px;padding:0 0;direction:rtl}
-.sec-head{text-align:center;margin-bottom:28px}
-.sec-head h2{font-size:34px;color:#1f3a2e;font-weight:700}
-.sec-head h2::after{content:"";display:block;width:56px;height:3px;background:#b8862b;;margin:10px auto 0}
-.sec-head p{color:#666;font-size:16px;margin-top:10px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px}
-.g5{grid-template-columns:repeat(5,1fr)}.g3{grid-template-columns:repeat(3,1fr);max-width:760px;margin:0 auto}
-.p-card{position:relative;background:#fff;;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.05);transition:transform .25s,box-shadow .25s}
-.p-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.1)}
-.p-tag{position:absolute;top:12px;right:12px;z-index:2;background:#b8862b;color:#fff;font-size:12px;font-weight:700;padding:4px 12px;}
-.p-img{aspect-ratio:1/1;background:#f3eee4;display:flex;align-items:center;justify-content:center}
-.book{width:52%;aspect-ratio:3/4;;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:-8px 10px 22px rgba(0,0,0,.25),inset 6px 0 0 rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;border:2px solid rgba(241,208,138,.5);outline:1px solid rgba(241,208,138,.4);outline-offset:-10px}
-.book span{font-family:'DecoType Thuluth','Aref Ruqaa',serif;color:#f1d08a;font-size:20px;text-align:center;line-height:1.3}
-.p-body{padding:16px 18px 18px}
-.p-body h3 a{color:inherit;text-decoration:none}.p-body h3{font-size:17px;color:#1f3a2e;font-weight:700}
-.p-body p{font-size:13px;color:#6b6b6b;margin:4px 0 14px}
-.p-foot{display:flex;justify-content:space-between;align-items:center}
-.price{font-size:20px;font-weight:700;color:#1f3a2e}.price small{font-size:13px;font-weight:600}
-.add{font-size:13px;font-weight:700;color:#fff;background:#1f3a2e;padding:8px 14px;;text-decoration:none;transition:background .2s}
-.add:hover{background:#b8862b}
-@media(max-width:860px){.products{padding:0 16px;margin-bottom:44px}.sec-head h2{font-size:26px}.grid,.g5,.g3{grid-template-columns:repeat(2,1fr);gap:12px}.p-body{padding:12px}.p-body h3{font-size:14px}.p-body p{font-size:12px;margin-bottom:10px}.p-foot{flex-direction:column;align-items:stretch;gap:8px}.price{font-size:17px}.add{text-align:center}.book span{font-size:15px}}
-.fx-wrap{max-width:1184px;margin:0 auto 72px;display:flex;flex-direction:column;gap:56px;direction:rtl}
-.fx{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-.fx.rev .fx-img{order:2}
-.fx-img{;overflow:hidden;aspect-ratio:4/3;box-shadow:0 14px 40px rgba(0,0,0,.12)}
-.fx-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s}
-.fx:hover .fx-img img{transform:scale(1.04)}
-.badge2{display:inline-block;background:#efe4cc;color:#8a6420;font-weight:700;font-size:13px;padding:6px 16px;;margin-bottom:16px}
-.fx-text h2{font-size:38px;font-weight:700;color:#1f3a2e;line-height:1.4;margin-bottom:14px}
-.fx-text h2 span{color:#b8862b}
-.fx-text p{font-size:17px;color:#666;line-height:1.9;margin-bottom:20px}
-.fx-text ul{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
-.fx-text li{display:flex;align-items:center;gap:10px;font-weight:600;color:#1f3a2e}
-.fx-text li span{width:26px;height:26px;;background:#1f3a2e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
-.fx-btn{display:inline-block;font-weight:700;font-size:16px;color:#fff;background:#1f3a2e;padding:14px 34px;;text-decoration:none;transition:background .2s}
-.fx-btn:hover{background:#b8862b}
-@media(max-width:860px){.fx-wrap{padding:0 16px;gap:44px;margin-bottom:48px}.fx{grid-template-columns:1fr;gap:22px}.fx.rev .fx-img{order:0}.fx-img{}.fx-text{text-align:center}.fx-text h2{font-size:28px}.fx-text p{font-size:15px}.fx-text ul{align-items:center}.fx-btn{display:block;text-align:center}}
-.reviews{max-width:1184px;margin:0 auto 80px;direction:rtl}
-.rv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.rv{background:#fff;;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.06);display:flex;flex-direction:column}
-.rv-img{aspect-ratio:1/1;overflow:hidden}
-.rv-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
-.rv:hover .rv-img img{transform:scale(1.05)}
-.rv-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
-.stars{color:#d9a b3a;color:#e0a82e;font-size:18px;letter-spacing:2px;margin-bottom:10px}
-.rv-body p{font-size:15px;color:#444;line-height:1.85;flex:1;margin-bottom:18px}
-.rv-user{display:flex;align-items:center;gap:10px;border-top:1px solid #f0ece3;padding-top:14px}
-.av{width:40px;height:40px;;background:#1f3a2e;color:#f1d08a;display:flex;align-items:center;justify-content:center;font-weight:700}
-.rv-user b{display:block;font-size:15px;color:#1f3a2e}
-.rv-user small{font-size:12px;color:#767676}
-.ok{margin-right:auto;font-size:11px;font-weight:700;color:#2f7a4f;background:#e6f3ea;padding:4px 10px;;white-space:nowrap}
-@media(max-width:860px){.reviews{padding:0 16px;margin-bottom:56px}.rv-grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:82%;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding-bottom:8px}.rv{scroll-snap-align:start}.ok{display:none}}
-.faqs{max-width:820px;margin:0 auto 80px;direction:rtl}
-.faq-list{display:flex;flex-direction:column;gap:12px}
-.faq{background:#fff;;box-shadow:0 4px 16px rgba(0,0,0,.04);overflow:hidden;border:1px solid transparent;transition:border-color .2s}
-.faq[open]{border-color:#e7dcc4}
-.faq summary{list-style:none;cursor:pointer;padding:20px 24px;font-weight:700;font-size:17px;color:#1f3a2e;display:flex;justify-content:space-between;align-items:center;gap:16px}
-.faq summary::-webkit-details-marker{display:none}
-.pm{flex:0 0 30px;height:30px;;background:#efe4cc;position:relative;transition:background .2s}
-.pm::before,.pm::after{content:"";position:absolute;top:50%;left:50%;width:12px;height:2px;background:#1f3a2e;transform:translate(-50%,-50%);transition:transform .25s}
-.pm::after{transform:translate(-50%,-50%) rotate(90deg)}
-.faq[open] .pm{background:#1f3a2e}.faq[open] .pm::before,.faq[open] .pm::after{background:#fff}
-.faq[open] .pm::after{transform:translate(-50%,-50%) rotate(0)}
-.faq p{padding:0 24px 22px;color:#666;font-size:15px;line-height:1.9}
-.faq-cta{text-align:center;margin-top:32px}.faq-cta p{color:#666;margin-bottom:14px}
-@media(max-width:860px){.faqs{padding:0 16px;margin-bottom:56px}.faq summary{font-size:15px;padding:16px 18px}.faq p{padding:0 18px 18px;font-size:14px}}
-.footer{background:#1f3a2e;color:#d6e0da;direction:rtl;margin-top:40px;}
-.f-top{max-width:1184px;margin:0 auto;padding:64px 0 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1.3fr;gap:40px}
-.f-logo{font-family:'DecoType Thuluth','Aref Ruqaa',serif;font-size:52px;color:#f1d08a;text-decoration:none;line-height:1}
-.f-brand p{margin:16px 0 22px;line-height:1.9;font-size:15px;max-width:340px;color:#b9c8bf}
-.social{display:flex;gap:10px}
-.social a{width:42px;height:42px;;background:rgba(255,255,255,.08);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s}
-.social a:hover{background:#b8862b}.social svg{width:20px;height:20px}
-.f-col{display:flex;flex-direction:column;gap:12px}
-.f-col h4{color:#fff;font-size:17px;margin-bottom:6px}
-.f-col a,.f-col span{color:#b9c8bf;text-decoration:none;font-size:15px;transition:color .2s}
-.f-col a:hover{color:#f1d08a}
-.f-col span{display:flex;align-items:center;gap:10px}.ci{width:18px;height:18px;color:#f1d08a;flex:0 0 18px}
-.f-wa{margin-top:6px;align-self:flex-start;background:#b8862b;color:#fff!important;padding:10px 20px;;font-weight:700}
-.f-wa:hover{background:#f1d08a;color:#1f3a2e!important}
-.f-bottom{max-width:1184px;margin:0 auto;padding:22px 0 28px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;font-size:14px;color:#94a89c;flex-wrap:wrap;gap:10px}
-@media(max-width:860px){.footer{}.f-top{grid-template-columns:1fr 1fr;padding:44px 20px 28px;gap:30px}.f-brand{grid-column:1/-1;text-align:center}.f-brand p{margin:14px auto 20px}.social{justify-content:center}.f-col:last-child{grid-column:1/-1;align-items:center;text-align:center}.f-wa{align-self:center}.f-bottom{padding:18px 20px 24px;flex-direction:column;align-items:center;text-align:center}}
-@media(max-width:860px){
-html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
-.features{grid-template-columns:repeat(3,1fr);margin:4px 16px 36px}
-.feature{flex-direction:column;text-align:center;gap:8px;padding:16px 6px;justify-content:flex-start}
-.feature+.feature{border-top:0;border-right:1px solid #efe9dd}
-.f-icon{flex:0 0 auto;width:44px;height:44px;}.f-icon svg{width:22px;height:22px}
-.feature h3{font-size:13px}.feature p{display:none}
-.products{padding:0;margin-bottom:40px}.products .sec-head{padding:0 16px}
-.grid,.g5,.g3{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:44%;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:4px 16px 14px;scroll-padding:0 16px;max-width:none;scrollbar-width:none}
-.grid::-webkit-scrollbar,.rv-grid::-webkit-scrollbar{display:none}
-.p-card{scroll-snap-align:start}
-.p-card:hover{transform:none}
-.reviews{padding:0}.reviews .sec-head{padding:0 16px}
-.rv-grid{padding:4px 16px 14px;scroll-padding:0 16px;scrollbar-width:none}
-.sec-head{margin-bottom:18px}
-.wa-float{display:flex!important}
-}
-.wa-float{position:fixed;bottom:18px;left:18px;width:56px;height:56px;;background:#25d366;color:#fff;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,.25);z-index:50}
-.wa-float svg{width:28px;height:28px}
-.wa-float{display:none}
-*,*::before,*::after{border-radius:0!important}
-.wa-float{border-radius:50%!important}
-@media(max-width:860px){
-.f-top{grid-template-columns:1fr;gap:0;padding:44px 20px 8px}
-.f-brand{padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.1)}
-.f-col,.f-col:last-child{grid-column:auto;align-items:center;text-align:center;padding:24px 0;border-bottom:1px solid rgba(255,255,255,.1);gap:0}
-.f-col:last-child{border-bottom:0}
-.f-col h4{margin-bottom:14px;font-size:16px}
-.f-col:not(:last-child){flex-direction:row;flex-wrap:wrap;justify-content:center}
-.f-col:not(:last-child) h4{width:100%}
-.f-col:not(:last-child) a{padding:4px 12px;font-size:14px}
-.f-col:not(:last-child) a+a{border-right:1px solid rgba(255,255,255,.2)}
-.f-col:last-child span{justify-content:center;padding:5px 0;font-size:15px}
-.f-wa{display:block;width:100%;text-align:center;margin-top:16px;padding:14px}
-}
-html{scroll-padding-top:100px;scroll-behavior:smooth}.nav a.on,.mobile-menu a.on{color:#b8862b}.f-col a.ct{display:flex;align-items:center;gap:8px}.see-all{color:#b8862b;font-weight:700;text-decoration:none}.see-all:hover{color:#1f3a2e}a.p-img{text-decoration:none}@media(min-width:1024px){
-.slider{height:calc(100vh - var(--hh,84px));height:calc(100svh - var(--hh,84px));margin:0 auto;padding:clamp(14px,2.5vh,28px) 48px 0;display:flex;flex-direction:column;box-sizing:border-box}
-.slider .track{flex:1 1 auto;min-height:0;aspect-ratio:auto}
-.slide{padding:0 clamp(48px,6vw,88px)}
-.slide h2{font-size:clamp(34px,5.2vh,56px);margin-bottom:clamp(8px,1.4vh,16px)}
-.slide p{font-size:clamp(15px,2.1vh,19px);margin-bottom:clamp(16px,3vh,32px)}
-.badge{margin-bottom:clamp(10px,2vh,20px)}
-.btn-main{padding:clamp(11px,1.8vh,16px) 38px}
-.dots{flex:0 0 auto;margin:0;padding:clamp(10px,2vh,18px) 0}
-}
-</style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "صحابي", "alternateName": "Sahaby", "url": "https://sahaby.ma/", "logo": "https://sahaby.ma/assets/icon-512.png", "email": "contact@sahaby.ma", "telephone": "+212600000000", "address": {"@type": "PostalAddress", "addressCountry": "MA"}, "sameAs": ["https://instagram.com/sahaby", "https://facebook.com/sahaby"]}</script>
 <link rel="stylesheet" href="assets/site.css">
 </head>
@@ -225,25 +29,31 @@ html{scroll-padding-top:100px;scroll-behavior:smooth}.nav a.on,.mobile-menu a.on
   <a href="products.html" class="cta">اكتشف الآن</a>
 </header>
 <nav class="mobile-menu" id="mm"><a href="products.html">المنتجات</a><a href="#contact">اتصل بنا</a><a href="about.html">من نحن</a></nav>
-<script>(function(){var h=document.querySelector('.header');function f(){document.documentElement.style.setProperty('--hh',h.offsetHeight+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();</script>
 <section tabindex="-1" class="slider" id="slider">
   <div class="track">
-    <div class="slide s1"><div class="slide-content"><span class="badge">✦ تشكيلة جديدة 2026</span><h2>تسوّق بأناقة،<br>واكتشف <span>ما يليق بك</span></h2><p>منتجات مختارة بعناية تجمع بين الجودة والذوق الرفيع.</p><a href="products.html" class="btn-main">تسوّق الآن</a></div></div>
-    <div class="slide s2"><div class="slide-content"><span class="badge">✦ عرض محدود</span><h2>خصم <span>30%</span><br>على طلبك الأول</h2><p>استخدم الكود SAHABY30 عند الدفع واستمتع بالتوفير.</p><a href="products.html" class="btn-main">احصل على العرض</a></div></div>
-    <div class="slide s3"><div class="slide-content"><span class="badge">✦ شحن سريع</span><h2>توصيل مجاني<br><span>لجميع المدن</span></h2><p>للطلبات فوق 200 درهم، مع إمكانية الإرجاع خلال 14 يوماً.</p><a href="products.html" class="btn-main">تصفّح المنتجات</a></div></div>
+    <div class="slide s1"><div class="slide-content"><span class="badge">مصاحف وتفاسير مختارة</span><h2>رفيقك اليومي<br><span>مع القرآن الكريم</span></h2><p>طباعة واضحة وتجليد متين، تصلك إلى باب بيتك والدفع عند الاستلام.</p><a href="products.html" class="btn-main">تسوّق الآن</a></div></div>
+    <div class="slide s2"><div class="slide-content"><span class="badge">عرض محدود</span><h2>خصم <span>30%</span><br>على طلبك الأول</h2><p>استخدم الكود SAHABY30 عند الطلب واستمتع بالتوفير.</p><a href="products.html?promo=SAHABY30" class="btn-main">احصل على العرض</a></div></div>
+    <div class="slide s3"><div class="slide-content"><span class="badge">شحن سريع</span><h2>توصيل مجاني<br><span>لجميع المدن</span></h2><p>للطلبات فوق 200 درهم، مع إمكانية الإرجاع خلال 14 يوماً.</p><a href="products.html" class="btn-main">تصفّح المنتجات</a></div></div>
   </div>
   <div class="dots"></div>
 </section>
 <section class="features">
   <div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg></div><div><h3>توصيل مجاني</h3><p>لجميع الطلبات فوق 200 درهم</p></div></div>
+  <div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg></div><div><h3>الدفع عند الاستلام</h3><p>لا تدفع إلا بعد أن يصلك طلبك</p></div></div>
   <div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M19 20c0 1-2 2-5 2"/></svg></div><div><h3>خدمة العملاء</h3><p>فريق دعم متاح 24/7</p></div></div>
-  <div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div><div><h3>جودة عالية</h3><p>منتجات مختارة بعناية</p></div></div>
 </section>
-<section class="products" id="quran"><div class="sec-head"><h2>القرآن الكريم</h2><p>مصاحف بأحجام وألوان مختلفة · <a class="see-all" href="products.html?cat=mushaf">عرض الكل ←</a></p></div><div class="grid g5"><div class="p-card"><a href="product.html?id=quran-big-blue" class="p-img" style="--c1:#1d3f6e;--c2:#2f6aa8"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=quran-big-blue">مصحف كبير - أزرق</a></h3><p>حجم كبير، غلاف فاخر</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=quran-big-blue" class="add">اطلب الآن</a></div></div></div><div class="p-card"><a href="product.html?id=quran-big-red" class="p-img" style="--c1:#7a1f24;--c2:#b23a3f"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=quran-big-red">مصحف كبير - أحمر</a></h3><p>حجم كبير، غلاف فاخر</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=quran-big-red" class="add">اطلب الآن</a></div></div></div><div class="p-card"><a href="product.html?id=quran-medium-black" class="p-img" style="--c1:#1a1a1a;--c2:#3a3a3a"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=quran-medium-black">مصحف متوسط - أسود</a></h3><p>حجم متوسط، مناسب للتنقل</p><div class="p-foot"><span class="price">150 <small>درهم</small></span><a href="product.html?id=quran-medium-black" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=pack-small" class="p-img" style="--c1:#1f3a2e;--c2:#3d6b55"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=pack-small">باقة صغيرة</a></h3><p>مجموعة مصاحف بحجم صغير</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=pack-small" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">الأكثر قيمة</span><a href="product.html?id=pack-large" class="p-img" style="--c1:#8a6420;--c2:#c99a3e"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=pack-large">باقة كبيرة</a></h3><p>مجموعة مصاحف متكاملة</p><div class="p-foot"><span class="price">500 <small>درهم</small></span><a href="product.html?id=pack-large" class="add">اطلب الآن</a></div></div></div></div></section>
-<section class="products" id="tafassir"><div class="sec-head"><h2>التفاسير</h2><p>باقات التفسير مع المصحف · <a class="see-all" href="products.html?cat=tafsir">عرض الكل ←</a></p></div><div class="grid g3"><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=tafsir-jalalayn" class="p-img" style="--c1:#1f3a2e;--c2:#3d6b55"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=tafsir-jalalayn">باقة الجلالين + مصحف أسود</a></h3><p>تفسير الجلالين مع مصحف أسود</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=tafsir-jalalayn" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=tafsir-sabri" class="p-img" style="--c1:#3b2a1a;--c2:#6b4a2b"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=tafsir-sabri">باقة صابري + مصحف أسود</a></h3><p>تفسير مع مصحف أسود</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=tafsir-sabri" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=tafsir-rahman" class="p-img" style="--c1:#1a1a1a;--c2:#4d5a52"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=tafsir-rahman">باقة الرحمن + مصحف أسود</a></h3><p>تفسير مع مصحف أسود</p><div class="p-foot"><span class="price">250 <small>درهم</small></span><a href="product.html?id=tafsir-rahman" class="add">اطلب الآن</a></div></div></div></div></section>
-<section class="fx-wrap"><div class="fx "><div class="fx-img"><picture><source srcset="img/feat1.webp" type="image/webp"><img decoding="async" width="1100" height="825" src="img/feat1.jpg" alt="طباعة فاخرة <span></picture>تليق بكلام الله</span>" loading="lazy"></div><div class="fx-text"><span class="badge2">جودة الطباعة</span><h2>طباعة فاخرة <span>تليق بكلام الله</span></h2><p>نختار مصاحفنا بعناية من أفضل دور الطباعة، بورق مريح للعين وخط واضح وتجليد متين يدوم لسنوات.</p><ul><li><span>✓</span>ورق كريمي مريح للقراءة</li><li><span>✓</span>خط عثماني واضح</li><li><span>✓</span>تجليد فاخر ومتين</li></ul><a href="products.html?cat=mushaf" class="fx-btn">تصفّح المصاحف</a></div></div><div class="fx rev"><div class="fx-img"><picture><source srcset="img/feat2.webp" type="image/webp"><img decoding="async" width="1100" height="825" src="img/feat2.jpg" alt="أجمل هدية <span></picture>لمن تحب</span>" loading="lazy"></div><div class="fx-text"><span class="badge2">هدية مميزة</span><h2>أجمل هدية <span>لمن تحب</span></h2><p>اجعل هديتك ذات معنى. نغلّف طلبك بعناية في علبة أنيقة جاهزة للإهداء، مع إمكانية إضافة بطاقة إهداء باسمك.</p><ul><li><span>✓</span>تغليف هدايا أنيق</li><li><span>✓</span>بطاقة إهداء مخصصة</li><li><span>✓</span>توصيل لجميع مدن المغرب</li></ul><a href="products.html?cat=packs" class="fx-btn">اختر هديتك</a></div></div></section>
-<section class="reviews"><div class="sec-head"><h2>آراء عملائنا</h2><p>أكثر من 1000 عميل سعيد في جميع أنحاء المغرب</p></div><div class="rv-grid"><div class="rv"><div class="rv-img"><picture><source srcset="img/rev1.webp" type="image/webp"><img decoding="async" width="800" height="800" src="img/rev1.jpg" alt="صورة من فاطمة الزهراء" loading="lazy"></picture></div><div class="rv-body"><div class="stars" role="img" aria-label="تقييم 5 من 5">★★★★★</div><p>«المصحف أجمل من الصور، التجليد فاخر والخط واضح جداً. وصلني في يومين فقط، جزاكم الله خيراً.»</p><div class="rv-user"><span class="av">ف</span><div><b>فاطمة الزهراء</b><small>الدار البيضاء · مصحف كبير - أزرق</small></div><span class="ok">✓ مشتري موثّق</span></div></div></div><div class="rv"><div class="rv-img"><picture><source srcset="img/rev2.webp" type="image/webp"><img decoding="async" width="800" height="800" src="img/rev2.jpg" alt="صورة من يوسف" loading="lazy"></picture></div><div class="rv-body"><div class="stars" role="img" aria-label="تقييم 5 من 5">★★★★★</div><p>«طلبت الباقة الكبيرة لتوزيعها في المسجد، التغليف ممتاز وكل المصاحف وصلت بحالة ممتازة.»</p><div class="rv-user"><span class="av">ي</span><div><b>يوسف</b><small>الرباط · باقة كبيرة</small></div><span class="ok">✓ مشتري موثّق</span></div></div></div><div class="rv"><div class="rv-img"><picture><source srcset="img/rev3.webp" type="image/webp"><img decoding="async" width="800" height="800" src="img/rev3.jpg" alt="صورة من خديجة" loading="lazy"></picture></div><div class="rv-body"><div class="stars" role="img" aria-label="تقييم 5 من 5">★★★★★</div><p>«اشتريته هدية لوالدتي وفرحت به كثيراً. جودة عالية وسعر مناسب، أنصح به بشدة.»</p><div class="rv-user"><span class="av">خ</span><div><b>خديجة</b><small>مراكش · مصحف كبير - أحمر</small></div><span class="ok">✓ مشتري موثّق</span></div></div></div></div></section>
-<section class="faqs" id="faq"><div class="sec-head"><h2>الأسئلة الشائعة</h2><p>كل ما تحتاج معرفته قبل الطلب</p></div><div class="faq-list"><details class="faq" open><summary>كم تستغرق مدة التوصيل؟<span class="pm"></span></summary><p>يتم التوصيل خلال 24 إلى 72 ساعة حسب مدينتك، ونوصل إلى جميع مدن المغرب.</p></details><details class="faq"><summary>هل التوصيل مجاني؟<span class="pm"></span></summary><p>نعم، التوصيل مجاني لجميع الطلبات فوق 200 درهم. أما الطلبات الأقل فتُضاف رسوم توصيل رمزية.</p></details><details class="faq"><summary>ما هي طرق الدفع المتاحة؟<span class="pm"></span></summary><p>يمكنك الدفع نقداً عند الاستلام، فلا تدفع إلا بعد أن يصلك طلبك وتتأكد منه.</p></details><details class="faq"><summary>هل يمكنني إرجاع المنتج أو استبداله؟<span class="pm"></span></summary><p>نعم، يمكنك إرجاع أو استبدال المنتج خلال 14 يوماً من الاستلام، بشرط أن يكون بحالته الأصلية.</p></details><details class="faq"><summary>هل توفرون تغليف الهدايا؟<span class="pm"></span></summary><p>نعم، يمكنك طلب تغليف هدية أنيق مع بطاقة إهداء باسمك، فقط اذكر ذلك عند الطلب.</p></details><details class="faq"><summary>هل يمكنني الطلب بكميات كبيرة للمساجد أو الجمعيات؟<span class="pm"></span></summary><p>بالتأكيد، نوفر أسعاراً خاصة للطلبات الكبيرة. تواصل معنا وسنرسل لك عرضاً مناسباً.</p></details></div><div class="faq-cta"><p>لم تجد إجابة سؤالك؟</p><a href="#contact" class="fx-btn">تواصل معنا</a></div></section>
+<section class="products" id="quran"><div class="sec-head row"><div><h2>القرآن الكريم</h2><p>مصاحف بأحجام وألوان مختلفة</p></div><a class="see-all" href="products.html?cat=mushaf">عرض الكل ←</a></div><div class="grid g5"><div class="p-card"><a href="product.html?id=quran-big-blue" class="p-img" style="--c1:#1d3f6e;--c2:#2f6aa8"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=quran-big-blue">مصحف كبير - أزرق</a></h3><p>حجم كبير، غلاف فاخر</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=quran-big-blue" class="add">اطلب الآن</a></div></div></div><div class="p-card"><a href="product.html?id=quran-big-red" class="p-img" style="--c1:#7a1f24;--c2:#b23a3f"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=quran-big-red">مصحف كبير - أحمر</a></h3><p>حجم كبير، غلاف فاخر</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=quran-big-red" class="add">اطلب الآن</a></div></div></div><div class="p-card"><a href="product.html?id=quran-medium-black" class="p-img" style="--c1:#1a1a1a;--c2:#3a3a3a"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=quran-medium-black">مصحف متوسط - أسود</a></h3><p>حجم متوسط، مناسب للتنقل</p><div class="p-foot"><span class="price">150 <small>درهم</small></span><a href="product.html?id=quran-medium-black" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=pack-small" class="p-img" style="--c1:#1f3a2e;--c2:#3d6b55"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=pack-small">باقة صغيرة</a></h3><p>مجموعة مصاحف بحجم صغير</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=pack-small" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">الأكثر قيمة</span><a href="product.html?id=pack-large" class="p-img" style="--c1:#8a6420;--c2:#c99a3e"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=pack-large">باقة كبيرة</a></h3><p>مجموعة مصاحف متكاملة</p><div class="p-foot"><span class="price">500 <small>درهم</small></span><a href="product.html?id=pack-large" class="add">اطلب الآن</a></div></div></div></div></section>
+<section class="products" id="tafassir"><div class="sec-head row"><div><h2>التفاسير</h2><p>باقات التفسير مع المصحف</p></div><a class="see-all" href="products.html?cat=tafsir">عرض الكل ←</a></div><div class="grid g3"><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=tafsir-jalalayn" class="p-img" style="--c1:#1f3a2e;--c2:#3d6b55"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=tafsir-jalalayn">باقة الجلالين + مصحف أسود</a></h3><p>تفسير الجلالين مع مصحف أسود</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=tafsir-jalalayn" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=tafsir-sabri" class="p-img" style="--c1:#3b2a1a;--c2:#6b4a2b"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=tafsir-sabri">باقة صابري + مصحف أسود</a></h3><p>تفسير مع مصحف أسود</p><div class="p-foot"><span class="price">200 <small>درهم</small></span><a href="product.html?id=tafsir-sabri" class="add">اطلب الآن</a></div></div></div><div class="p-card"><span class="p-tag">باقة</span><a href="product.html?id=tafsir-rahman" class="p-img" style="--c1:#1a1a1a;--c2:#4d5a52"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=tafsir-rahman">باقة الرحمن + مصحف أسود</a></h3><p>تفسير مع مصحف أسود</p><div class="p-foot"><span class="price">250 <small>درهم</small></span><a href="product.html?id=tafsir-rahman" class="add">اطلب الآن</a></div></div></div><a class="p-promo" href="products.html?cat=tafsir"><picture><source srcset="img/pf-study.webp" type="image/webp"><img decoding="async" width="1000" height="750" src="img/pf-study.jpg" alt="" loading="lazy"></picture><span><small>مصحف + تفسير</small><b>افهم معاني ما تقرأ</b><i>تصفّح باقات التفسير ←</i></span></a></div></section>
+<section class="stories">
+ <article class="story"><a class="story-img" href="products.html?cat=mushaf" tabindex="-1" aria-hidden="true"><picture><source srcset="img/feat1.webp" type="image/webp"><img decoding="async" width="1100" height="825" src="img/feat1.jpg" alt="" loading="lazy"></picture></a><div class="story-txt"><span class="eyebrow">جودة الطباعة</span><h2>طباعة فاخرة <span>تليق بكلام الله</span></h2><p>نختار مصاحفنا بعناية من أفضل دور الطباعة، بورق مريح للعين وخط واضح وتجليد متين يدوم لسنوات.</p><ul class="pts"><li>ورق كريمي مريح للقراءة</li><li>خط عثماني واضح</li><li>تجليد فاخر ومتين</li></ul><a href="products.html?cat=mushaf" class="link">تصفّح المصاحف ←</a></div></article>
+ <article class="story"><a class="story-img" href="products.html?cat=packs" tabindex="-1" aria-hidden="true"><picture><source srcset="img/feat2.webp" type="image/webp"><img decoding="async" width="1100" height="825" src="img/feat2.jpg" alt="" loading="lazy"></picture></a><div class="story-txt"><span class="eyebrow">هدية مميزة</span><h2>أجمل هدية <span>لمن تحب</span></h2><p>اجعل هديتك ذات معنى. نغلّف طلبك بعناية في علبة أنيقة جاهزة للإهداء، مع إمكانية إضافة بطاقة إهداء باسمك.</p><ul class="pts"><li>تغليف هدايا أنيق</li><li>بطاقة إهداء مخصصة</li><li>توصيل لجميع مدن المغرب</li></ul><a href="products.html?cat=packs" class="link">اختر هديتك ←</a></div></article>
+</section>
+<section class="reviews"><div class="sec-head"><h2>آراء عملائنا</h2><p>أكثر من 1000 عميل سعيد في جميع أنحاء المغرب</p></div><div class="rv-grid">
+ <figure class="rv"><div class="stars" role="img" aria-label="تقييم 5 من 5">★★★★★</div><p>«المصحف أجمل من الصور، التجليد فاخر والخط واضح جداً. وصلني في يومين فقط، جزاكم الله خيراً.»</p><figcaption class="rv-user"><picture><source srcset="img/rev1.webp" type="image/webp"><img class="rv-ph" decoding="async" width="800" height="800" src="img/rev1.jpg" alt="صورة من فاطمة الزهراء" loading="lazy"></picture><div><b>فاطمة الزهراء</b><small>الدار البيضاء · مصحف كبير - أزرق</small></div><span class="verified">✓ مشتري موثّق</span></figcaption></figure>
+ <figure class="rv"><div class="stars" role="img" aria-label="تقييم 5 من 5">★★★★★</div><p>«طلبت الباقة الكبيرة لتوزيعها في المسجد، التغليف ممتاز وكل المصاحف وصلت بحالة ممتازة.»</p><figcaption class="rv-user"><picture><source srcset="img/rev2.webp" type="image/webp"><img class="rv-ph" decoding="async" width="800" height="800" src="img/rev2.jpg" alt="صورة من يوسف" loading="lazy"></picture><div><b>يوسف</b><small>الرباط · باقة كبيرة</small></div><span class="verified">✓ مشتري موثّق</span></figcaption></figure>
+ <figure class="rv"><div class="stars" role="img" aria-label="تقييم 5 من 5">★★★★★</div><p>«اشتريته هدية لوالدتي وفرحت به كثيراً. جودة عالية وسعر مناسب، أنصح به بشدة.»</p><figcaption class="rv-user"><picture><source srcset="img/rev3.webp" type="image/webp"><img class="rv-ph" decoding="async" width="800" height="800" src="img/rev3.jpg" alt="صورة من خديجة" loading="lazy"></picture><div><b>خديجة</b><small>مراكش · مصحف كبير - أحمر</small></div><span class="verified">✓ مشتري موثّق</span></figcaption></figure>
+</div></section>
+<section class="faqs" id="faq"><div class="faq-side"><div class="sec-head"><h2>الأسئلة الشائعة</h2><p>كل ما تحتاج معرفته قبل الطلب</p></div><div class="faq-cta"><p>لم تجد إجابة سؤالك؟</p><a href="https://wa.me/212600000000?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D8%B5%D8%AD%D8%A7%D8%A8%D9%8A" target="_blank" rel="noopener" class="fx-btn">اسألنا على واتساب</a></div></div><div class="faq-list"><details class="faq" open><summary>كم تستغرق مدة التوصيل؟<span class="pm"></span></summary><p>يتم التوصيل خلال 24 إلى 72 ساعة حسب مدينتك، ونوصل إلى جميع مدن المغرب.</p></details><details class="faq"><summary>هل التوصيل مجاني؟<span class="pm"></span></summary><p>نعم، التوصيل مجاني لجميع الطلبات فوق 200 درهم. أما الطلبات الأقل فتُضاف رسوم توصيل رمزية.</p></details><details class="faq"><summary>ما هي طرق الدفع المتاحة؟<span class="pm"></span></summary><p>يمكنك الدفع نقداً عند الاستلام، فلا تدفع إلا بعد أن يصلك طلبك وتتأكد منه.</p></details><details class="faq"><summary>هل يمكنني إرجاع المنتج أو استبداله؟<span class="pm"></span></summary><p>نعم، يمكنك إرجاع أو استبدال المنتج خلال 14 يوماً من الاستلام، بشرط أن يكون بحالته الأصلية.</p></details><details class="faq"><summary>هل توفرون تغليف الهدايا؟<span class="pm"></span></summary><p>نعم، يمكنك طلب تغليف هدية أنيق مع بطاقة إهداء باسمك، فقط اذكر ذلك عند الطلب.</p></details><details class="faq"><summary>هل يمكنني الطلب بكميات كبيرة للمساجد أو الجمعيات؟<span class="pm"></span></summary><p>بالتأكيد، نوفر أسعاراً خاصة للطلبات الكبيرة. تواصل معنا وسنرسل لك عرضاً مناسباً.</p></details></div></section>
 <footer class="footer">
   <div class="f-top">
     <div class="f-brand"><a href="index.html" class="f-logo">صحابي</a><p>متجرك الموثوق للمصاحف وكتب التفسير، نوصل إلى جميع مدن المغرب بجودة عالية وتغليف أنيق.</p>

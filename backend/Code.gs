@@ -6,7 +6,7 @@
 
 // ============ CONFIG ============
 const CFG = {
-  VERSION: '1.1.0',
+  VERSION: '1.2.0',
   HISTORY: 'History',
   SHEET: 'Orders',
   DASH: 'Dashboard',
@@ -34,6 +34,13 @@ const PRODUCTS = {
   'tafsir-rahman':      { name: 'باقة الرحمن + مصحف أسود',    price: 250 }
 };
 
+// Promo codes, checked on the server (the site's copy is only for display).
+// pct: percent off the order subtotal. firstOrder: only for a phone with no earlier non-cancelled order.
+// active: false stops new orders from using the code; orders that already have it keep their discount when edited.
+const PROMOS = {
+  'SAHABY30': { pct: 30, firstOrder: true, active: true }
+};
+
 // [stable key, Arabic header, width, number format]
 const COLS = [
   ['id',        'رقم الطلب',  160, '@'],
@@ -51,7 +58,9 @@ const COLS = [
   ['notes',     'ملاحظات',    230, '@'],
   ['source',    'المصدر',     230, '@'],
   ['updatedAt', 'آخر تحديث',  140, 'yyyy-mm-dd HH:mm'],
-  ['address',   'العنوان',    220, '@']   // added in v1.1 (auto-migrated)
+  ['address',   'العنوان',    220, '@'],  // added in v1.1 (auto-migrated)
+  ['promo',     'كود الخصم',  110, '@'],  // added in v1.2 (auto-migrated)
+  ['discount',  'الخصم',       95, '#,##0 "درهم"']  // v1.2; "total" is the amount to collect, after this discount
 ];
 const C = {}; COLS.forEach(function (c, i) { C[c[0]] = i + 1; });
 const NCOLS = COLS.length;
@@ -113,7 +122,7 @@ function buildOrdersSheet_(ss) {
     sh.setColumnWidth(i + 1, c[2]);
     sh.getRange(CFG.FIRST_DATA_ROW, i + 1, dataRows, 1).setNumberFormat(c[3]);
   });
-  ['id', 'createdAt', 'phone', 'qty', 'unitPrice', 'total', 'delivery', 'status', 'updatedAt'].forEach(function (k) {
+  ['id', 'createdAt', 'phone', 'qty', 'unitPrice', 'total', 'delivery', 'status', 'updatedAt', 'promo', 'discount'].forEach(function (k) {
     sh.getRange(CFG.FIRST_DATA_ROW, C[k], dataRows, 1).setHorizontalAlignment('center');
   });
   sh.getRange(CFG.FIRST_DATA_ROW, C.id, dataRows, 1).setFontWeight('bold').setFontColor(CFG.BRAND_GREEN);
@@ -150,6 +159,7 @@ function buildConfigSheet_(ss) {
   COLS.forEach(function (c, i) { rows.push(['column', c[0], c[1], columnLetter_(i + 1), c[3]]); });
   Object.keys(STATUS).forEach(function (k) { rows.push(['status', k, STATUS[k][0], '', STATUS[k][1]]); });
   Object.keys(PRODUCTS).forEach(function (k) { rows.push(['product', k, PRODUCTS[k].name, '', PRODUCTS[k].price]); });
+  Object.keys(PROMOS).forEach(function (k) { rows.push(['promo', k, PROMOS[k].pct + '%', PROMOS[k].firstOrder ? 'first order' : '', PROMOS[k].active ? 'active' : 'inactive']); });
   rows.push(['meta', 'version', CFG.VERSION, '', '']);
   sh.getRange(1, 1, rows.length, 5).setValues(rows).setFontFamily(CFG.FONT);
   sh.getRange(1, 1, 1, 5).setBackground(CFG.BRAND_GREEN).setFontColor(CFG.BRAND_GOLD_LIGHT).setFontWeight('bold');
@@ -249,6 +259,8 @@ function createOrder_(b) {
   if (!prod) errors.push('productId');
   if (!(qty >= 1 && qty <= CFG.MAX_QTY)) errors.push('qty');
   if (errors.length) return { ok: false, error: 'validation', fields: errors };
+  const promo = normPromo_(b.promo);
+  if (promo && !(PROMOS[promo] && PROMOS[promo].active)) return { ok: false, error: 'promo', reason: 'invalid' };
 
   const cache = CacheService.getScriptCache();
   const dupKey = 'dup_' + phone + '_' + b.productId;
@@ -256,25 +268,46 @@ function createOrder_(b) {
   lock.waitLock(20000);
   let order;
   try {
-    const prev = cache.get(dupKey);
+    const prev = cache.get(dupKey);                    // checked first, so a retried submit is not refused as "used"
     if (prev) return { ok: true, duplicate: true, orderId: prev };
+    const sh = sheet_();
+    if (promo && PROMOS[promo].firstOrder && hasOrders_(sh, phone)) return { ok: false, error: 'promo', reason: 'used' };
     const now = new Date();
-    const total = prod.price * qty;
+    const subtotal = prod.price * qty;
+    const discount = promoDiscount_(promo, subtotal);
     order = {
       id: nextId_(now), createdAt: now, name: name, phone: phone, city: city,
-      product: prod.name, productId: String(b.productId), qty: qty, unitPrice: prod.price, total: total,
-      delivery: total >= CFG.FREE_OVER ? 'مجاني' : 'يُحدد عند التأكيد',
+      product: prod.name, productId: String(b.productId), qty: qty, unitPrice: prod.price, total: subtotal - discount,
+      delivery: deliveryLabel_(subtotal),
       status: STATUS.new[0], notes: clean_(b.notes, 500), source: clean_(b.source, 300), updatedAt: now,
-      address: clean_(b.address, 200)
+      address: clean_(b.address, 200), promo: discount ? promo : '', discount: discount || ''
     };
-    const sh = sheet_();
     const r = Math.max(sh.getLastRow() + 1, CFG.FIRST_DATA_ROW);
     sh.getRange(r, 1, 1, NCOLS).setValues([COLS.map(function (c) { return order[c[0]]; })]);
     cache.put(dupKey, order.id, CFG.DUP_SECONDS);
     logHistory_([[order.id, now, 'status', '', order.status, 'website']]);
   } finally { lock.releaseLock(); }
   notify_(order);
-  return { ok: true, orderId: order.id, total: order.total, delivery: order.delivery };
+  return { ok: true, orderId: order.id, subtotal: order.unitPrice * order.qty, discount: Number(order.discount) || 0, promo: order.promo, total: order.total, delivery: order.delivery };
+}
+
+function normPromo_(v) { return String(v || '').replace(/\s/g, '').toUpperCase().slice(0, 30); }
+/** Discount in MAD for a known code (active or not), else 0. */
+function promoDiscount_(code, subtotal) {
+  const p = PROMOS[code];
+  return p ? Math.round(subtotal * p.pct / 100) : 0;
+}
+// Free delivery is decided on the price before any promo, so a discount never adds a delivery fee.
+function deliveryLabel_(subtotal) { return subtotal >= CFG.FREE_OVER ? 'مجاني' : 'يُحدد عند التأكيد'; }
+/** True when this phone already has an order that was not cancelled. */
+function hasOrders_(sh, phone) {
+  const last = sh.getLastRow();
+  if (last < CFG.FIRST_DATA_ROW) return false;
+  const n = last - CFG.FIRST_DATA_ROW + 1;
+  const phones = sh.getRange(CFG.FIRST_DATA_ROW, C.phone, n, 1).getValues();
+  const sts = sh.getRange(CFG.FIRST_DATA_ROW, C.status, n, 1).getValues();
+  for (let i = 0; i < n; i++) if (phones[i][0] === phone && sts[i][0] !== STATUS.cancelled[0]) return true;
+  return false;
 }
 
 function nextId_(d) {
@@ -296,7 +329,9 @@ function notify_(o) {
       htmlBody: '<div dir="rtl" style="font-family:Arial">' +
         '<h2 style="color:#1f3a2e">طلب جديد: ' + o.id + '</h2>' +
         '<p><b>الاسم:</b> ' + esc_(o.name) + '<br><b>الهاتف:</b> ' + o.phone + '<br><b>المدينة:</b> ' + esc_(o.city) +
-        '<br><b>المنتج:</b> ' + o.product + ' × ' + o.qty + '<br><b>المجموع:</b> ' + o.total + ' درهم (' + o.delivery + ')</p></div>'
+        '<br><b>المنتج:</b> ' + o.product + ' × ' + o.qty +
+        (o.discount ? '<br><b>الخصم:</b> ' + o.discount + ' درهم (' + o.promo + ')' : '') +
+        '<br><b>المجموع:</b> ' + o.total + ' درهم (' + o.delivery + ')</p></div>'
     });
   } catch (err) { console.error('notify failed', err); }
 }
@@ -352,9 +387,10 @@ function adminPost_(b) {
       const qty = f.qty != null ? Math.floor(Number(f.qty)) : Number(get('qty'));
       if (!(qty >= 1 && qty <= CFG.MAX_QTY)) errors.push('qty');
       if (errors.length) return { ok: false, error: 'validation', fields: errors };
-      if (f.productId != null || f.qty != null) {        // server-side recompute
+      if (f.productId != null || f.qty != null) {        // server-side recompute, keeping the order's promo code
+        const sub = prod.price * qty, disc = promoDiscount_(String(get('promo') || ''), sub);
         ch.productId = pid; ch.product = prod.name; ch.qty = qty; ch.unitPrice = prod.price;
-        ch.total = prod.price * qty; ch.delivery = ch.total >= CFG.FREE_OVER ? 'مجاني' : 'يُحدد عند التأكيد';
+        ch.discount = disc || ''; ch.total = sub - disc; ch.delivery = deliveryLabel_(sub);
       }
       Object.keys(ch).forEach(function (k) {
         const prev = get(k);

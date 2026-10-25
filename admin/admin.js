@@ -56,6 +56,7 @@ const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAl
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num = n => Number(n || 0).toLocaleString('en-US');
 const mad = n => num(n) + ' درهم';
+const discTxt = o => `<bdi dir="ltr">−${num(o.discount)}</bdi> درهم (${esc(o.promo)})`;
 const dayStr = d => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year:'numeric', month:'2-digit', day:'2-digit'}).format(d);
 const today = () => dayStr(new Date());
 const fmtDate = s => s ? String(s).replace('T', ' ').slice(0, 16) : '—';
@@ -295,7 +296,7 @@ async function changeStatus(id, s) {
 // ---------- drawer ----------
 function closeDrawer() { const was = $('#drawer').classList.contains('on'); $('#drawer').inert = true; if (was && lastFocus && lastFocus.isConnected) lastFocus.focus(); st.drawerId = null; $('#drawer').classList.remove('on'); $('#dscrim').classList.remove('on'); $('#drawer').setAttribute('aria-hidden', 'true'); }
 $('#dscrim').onclick = closeDrawer;
-const FIELD_AR = {status:'الحالة', notes:'الملاحظات', name:'الاسم', phone:'الهاتف', city:'المدينة', address:'العنوان', qty:'الكمية', productId:'رمز المنتج', product:'المنتج', unitPrice:'سعر الوحدة', total:'المجموع', delivery:'التوصيل'};
+const FIELD_AR = {status:'الحالة', notes:'الملاحظات', name:'الاسم', phone:'الهاتف', city:'المدينة', address:'العنوان', qty:'الكمية', productId:'رمز المنتج', product:'المنتج', unitPrice:'سعر الوحدة', total:'المجموع', delivery:'التوصيل', promo:'كود الخصم', discount:'الخصم'};
 const BY_AR = {website:'المتجر', admin:'لوحة التحكم', sheet:'الجدول'};
 async function openDrawer(id) {
   const o = st.orders.find(x => x.id === id); if (!o) return;
@@ -305,7 +306,7 @@ async function openDrawer(id) {
   <div class="dr-sec"><h4>العميل</h4><dl class="kv"><dt>الاسم</dt><dd>${esc(o.name)} ${rep > 1 ? `<span class="rep">عميل متكرر ×${rep}</span>` : ''}</dd><dt>الهاتف</dt><dd dir="ltr" style="text-align:right">${esc(localPhone(o.phone))}</dd><dt>المدينة</dt><dd>${esc(o.city)}</dd><dt>العنوان</dt><dd>${esc(o.address || '—')}</dd></dl>
    <div class="dr-acts" style="margin-top:12px"><a class="btn pri" href="tel:${esc(o.phone)}"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>اتصال</a><button class="btn" id="dr-copy">نسخ الهاتف</button>
    ${Object.keys(TPL_NAMES).map(k => `<a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/${waNum(o.phone)}?text=${encodeURIComponent(fill(S.templates[k], o))}">واتساب: ${TPL_NAMES[k]}</a>`).join('')}</div></div>
-  <div class="dr-sec"><h4>الطلب</h4><dl class="kv"><dt>المنتج</dt><dd>${esc(o.product)}</dd><dt>الكمية</dt><dd>${o.qty}</dd><dt>سعر الوحدة</dt><dd>${mad(o.unitPrice)}</dd><dt>التوصيل</dt><dd>${esc(o.delivery)}</dd><dt>المجموع</dt><dd class="total-big">${mad(o.total)}</dd><dt>المصدر</dt><dd style="font-size:12px;word-break:break-all">${esc(o.source || '—')}</dd><dt>آخر تحديث</dt><dd>${esc(fmtDate(o.updatedAt))}</dd></dl></div>
+  <div class="dr-sec"><h4>الطلب</h4><dl class="kv"><dt>المنتج</dt><dd>${esc(o.product)}</dd><dt>الكمية</dt><dd>${o.qty}</dd><dt>سعر الوحدة</dt><dd>${mad(o.unitPrice)}</dd>${+o.discount ? `<dt>الخصم</dt><dd>${discTxt(o)}</dd>` : ''}<dt>التوصيل</dt><dd>${esc(o.delivery)}</dd><dt>المجموع</dt><dd class="total-big">${mad(o.total)}</dd><dt>المصدر</dt><dd style="font-size:12px;word-break:break-all">${esc(o.source || '—')}</dd><dt>آخر تحديث</dt><dd>${esc(fmtDate(o.updatedAt))}</dd></dl></div>
   <div class="dr-sec"><h4>الحالة</h4><div class="dr-acts"><select id="dr-st" style="width:auto">${STATUSES.map(s => `<option value="${s[0]}"${s[0] === o.statusKey ? ' selected' : ''}>${s[1]}</option>`).join('')}</select><button class="btn pri" id="dr-st-go">حفظ الحالة</button><button class="btn" id="dr-print">طباعة الوصل</button><button class="btn dang" id="dr-del">إلغاء / حذف</button></div></div>
   <div class="dr-sec"><h4>ملاحظات</h4><textarea id="dr-note" rows="3" placeholder="ملاحظة داخلية...">${esc(o.notes)}</textarea><button class="btn" id="dr-note-go" style="margin-top:8px">حفظ الملاحظة</button></div>
   <div class="dr-sec"><details><summary style="cursor:pointer;font-weight:700;color:#1f3a2e">تعديل بيانات الطلب</summary><form class="frm" id="dr-edit" style="margin-top:12px">
@@ -313,7 +314,7 @@ async function openDrawer(id) {
    <div><label>المدينة</label><input name="city" value="${esc(o.city)}"></div><div><label>الكمية</label><input name="qty" type="number" min="1" max="99" value="${o.qty}"></div>
    <div class="full"><label>المنتج</label><select name="productId">${prods.map(([pid, p]) => `<option value="${pid}"${pid === o.productId ? ' selected' : ''}>${esc(p.name)} — ${mad(p.price)}</option>`).join('')}</select></div>
    <div class="full"><label>العنوان</label><input name="address" value="${esc(o.address || '')}"></div>
-   <div class="full"><button class="btn pri" type="submit">حفظ التعديلات</button><p class="note-s">يُعاد حساب المجموع على الخادم حسب الأسعار في Code.gs.</p></div></form></details></div>
+   <div class="full"><button class="btn pri" type="submit">حفظ التعديلات</button><p class="note-s">يُعاد حساب المجموع على الخادم حسب الأسعار في Code.gs، مع الإبقاء على كود الخصم إن وُجد.</p></div></form></details></div>
   <div class="dr-sec"><h4>سجل التغييرات</h4><div id="dr-hist"><div class="sk sk-line"></div><div class="sk sk-line"></div></div></div>`;
   const wasOpen = $('#drawer').classList.contains('on'); $('#drawer').inert = false;
   if (!wasOpen) { lastFocus = document.activeElement; restart($('#dr'), 'fx-dr'); setTimeout(() => { const x = $('#dr-x'); x && x.focus({preventScroll: true}); }, 30); }
@@ -345,7 +346,7 @@ function printSlips(list) {
   if (!list.length) return;
   $('#print').innerHTML = list.map(o => `<div class="slip"><div class="ph"><div class="lg">صحابي</div><div style="text-align:left"><h2 dir="ltr">${esc(o.id)}</h2><small>${esc(fmtDate(o.createdAt))}</small></div></div>
    <table><tr><th>الاسم</th><td>${esc(o.name)}</td></tr><tr><th>الهاتف</th><td dir="ltr" style="text-align:right">${esc(localPhone(o.phone))}</td></tr><tr><th>المدينة</th><td>${esc(o.city)}</td></tr><tr><th>العنوان</th><td>${esc(o.address || '')}</td></tr></table>
-   <table><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>المجموع</th></tr><tr><td>${esc(o.product)}</td><td>${o.qty}</td><td>${mad(o.unitPrice)}</td><td>${mad(o.total)}</td></tr><tr><td colspan="3">التوصيل</td><td>${esc(o.delivery)}</td></tr></table>
+   <table><tr><th>المنتج</th><th>الكمية</th><th>سعر الوحدة</th><th>المجموع</th></tr><tr><td>${esc(o.product)}</td><td>${o.qty}</td><td>${mad(o.unitPrice)}</td><td>${mad(o.total)}</td></tr>${+o.discount ? `<tr><td colspan="3">الخصم</td><td>${discTxt(o)}</td></tr>` : ''}<tr><td colspan="3">التوصيل</td><td>${esc(o.delivery)}</td></tr></table>
    <div class="cod">المبلغ عند الاستلام: ${mad(o.total)}</div>${o.notes ? `<p style="font-size:11px">ملاحظات: ${esc(o.notes)}</p>` : ''}<div class="ft">شكراً لثقتكم بصحابي · الدفع عند الاستلام · جزاكم الله خيراً</div></div>`).join('');
   window.print();
 }
@@ -354,7 +355,7 @@ function printList() {
   $('#print').innerHTML = `<div class="plist"><h2 style="font-family:'Aref Ruqaa'">صحابي — قائمة الطلبات (${L.length})</h2><p style="font-size:10px">${new Date().toLocaleString('en-GB')}</p><table><tr>${['رقم الطلب', 'التاريخ', 'الاسم', 'الهاتف', 'المدينة', 'المنتج', 'الكمية', 'المجموع', 'الحالة'].map(h => `<th>${h}</th>`).join('')}</tr>${L.map(o => `<tr><td>${esc(o.id)}</td><td>${esc(fmtDate(o.createdAt))}</td><td>${esc(o.name)}</td><td dir="ltr">${esc(localPhone(o.phone))}</td><td>${esc(o.city)}</td><td>${esc(o.product)}</td><td>${o.qty}</td><td>${num(o.total)}</td><td>${esc(stLabel(o.statusKey))}</td></tr>`).join('')}</table></div>`;
   window.print();
 }
-const EXP_COLS = [['id', 'رقم الطلب'], ['createdAt', 'التاريخ'], ['name', 'الاسم'], ['phone', 'الهاتف'], ['city', 'المدينة'], ['address', 'العنوان'], ['product', 'المنتج'], ['productId', 'رمز المنتج'], ['qty', 'الكمية'], ['unitPrice', 'سعر الوحدة'], ['total', 'المجموع'], ['delivery', 'التوصيل'], ['status', 'الحالة'], ['notes', 'ملاحظات'], ['updatedAt', 'آخر تحديث']];
+const EXP_COLS = [['id', 'رقم الطلب'], ['createdAt', 'التاريخ'], ['name', 'الاسم'], ['phone', 'الهاتف'], ['city', 'المدينة'], ['address', 'العنوان'], ['product', 'المنتج'], ['productId', 'رمز المنتج'], ['qty', 'الكمية'], ['unitPrice', 'سعر الوحدة'], ['promo', 'كود الخصم'], ['discount', 'الخصم'], ['total', 'المجموع'], ['delivery', 'التوصيل'], ['status', 'الحالة'], ['notes', 'ملاحظات'], ['updatedAt', 'آخر تحديث']];
 function exportFile(kind) {
   const L = filtered(); if (!L.length) return toast('لا توجد طلبات للتصدير', true);
   const val = (o, k) => k === 'status' ? stLabel(o.statusKey) : k === 'createdAt' || k === 'updatedAt' ? fmtDate(o[k]) : (o[k] ?? '');
