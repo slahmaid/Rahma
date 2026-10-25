@@ -139,9 +139,10 @@ bdi{unicode-bidi:isolate}
 .grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px 16px}
 .pl-grid,#sim{grid-template-columns:repeat(4,minmax(0,1fr))}
 .p-card{position:relative;display:flex;flex-direction:column}
-.p-img{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:var(--soft);overflow:hidden}
-.book{width:48%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--c1),var(--c2));border:1px solid rgba(241,208,138,.45);outline:1px solid rgba(241,208,138,.35);outline-offset:-8px;box-shadow:-6px 8px 18px rgba(0,0,0,.18),inset 5px 0 0 rgba(0,0,0,.18);transition:transform .6s var(--ease)}
-.book span{font-family:var(--f-logo);font-size:18px;line-height:1.3;color:var(--gold-l);text-align:center}
+/* product photos are square crops; --pos moves the crop onto the book when it is off-centre */
+.p-img{display:block;aspect-ratio:1/1;background:var(--soft);overflow:hidden}
+.p-img img,.gal-main img,.gal-thumbs img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%)}
+.p-img img{transition:transform .8s var(--ease)}
 .p-tag{position:absolute;top:10px;inset-inline-start:10px;z-index:2;padding:1px 8px;font-size:11px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line)}
 .p-body{display:flex;flex-direction:column;flex:1;padding-top:12px}
 .p-body h3{font-size:14.5px;line-height:1.5}
@@ -153,7 +154,7 @@ bdi{unicode-bidi:isolate}
 .price small{font-size:12px;font-weight:600;color:var(--muted)}
 .add{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 12px;font-size:12.5px;font-weight:700;color:var(--ink);border:1px solid var(--line-2);transition:background .2s,color .2s,border-color .2s}
 .add:hover{background:var(--ink);border-color:var(--ink);color:#fff}
-@media(hover:hover){.p-card:hover .book{transform:translateY(-4px)}}
+@media(hover:hover){.p-card:hover .p-img img{transform:scale(1.04)}}
 /* promo tile filling the short tafsir row */
 .p-promo{grid-column:span 2;position:relative;display:flex;align-items:flex-end;overflow:hidden;background:var(--ink);color:#fff}
 .p-promo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
@@ -267,16 +268,14 @@ body:has(.header.hide) .fbar{top:0}
 .crumb b{color:var(--ink);font-weight:600}
 .pp{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:start;margin-top:16px}
 .gal{position:sticky;top:calc(var(--hdr) + 16px)}
-.gal-main{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:var(--soft)}
-.gal-main>*{animation:gfade .45s ease both}
+.gal-main{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--soft)}
+.gal-main img{animation:gfade .45s ease both}
 @keyframes gfade{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:none}}
-.gal-main .book{width:44%}.gal-main .book span{font-size:32px}
-.open-v{width:78%;aspect-ratio:4/3;display:grid;grid-template-columns:1fr 1fr;background:#fbf8f1;border:1px solid #d9c9a3;box-shadow:0 12px 26px rgba(0,0,0,.12)}
-.open-v div{display:flex;align-items:center;justify-content:center;margin:14px;font-family:'Aref Ruqaa',serif;font-size:24px;color:var(--gold-t);border:1px solid #efe4cc}
 .gal-thumbs{display:grid;grid-template-columns:repeat(3,72px);gap:8px;margin-top:8px}
-.gal-thumbs button{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;font-size:11px;font-weight:700;color:var(--gold-t);background:var(--soft);border:1px solid transparent;transition:border-color .2s}
-.gal-thumbs button.on{border-color:var(--ink)}
-.gal-thumbs .book{width:46%;box-shadow:-3px 4px 8px rgba(0,0,0,.18);outline-offset:-4px}.gal-thumbs .book span{font-size:8px}
+.gal-thumbs button{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--soft);opacity:.7;transition:opacity .2s}
+.gal-thumbs button::after{content:"";position:absolute;inset:0;border:1px solid transparent;transition:border-color .2s}
+.gal-thumbs button:hover{opacity:1}
+.gal-thumbs button.on{opacity:1}.gal-thumbs button.on::after{border:2px solid var(--ink)}
 .pi .cat{display:inline-block;margin-bottom:2px;font-size:12px;font-weight:700;color:var(--gold-t)}
 .pi h1{font-size:26px}
 .pprice{margin:6px 0 10px;font-size:22px;font-weight:700;color:var(--ink)}
@@ -368,9 +367,7 @@ body:has(.header.hide) .fbar{top:0}
  .pp{grid-template-columns:1fr;gap:16px}
  .gal{position:static}
  .gal-main{aspect-ratio:4/3}
- .gal-main .book{width:34%}.gal-main .book span{font-size:24px}
- .gal-main .open-v{width:70%}
- .gal-thumbs{justify-content:center}
+ .gal-thumbs{justify-content:center;grid-template-columns:repeat(3,64px)}
  .pi{display:flex;flex-direction:column}
  .pi h1{font-size:22px}
  .pprice{font-size:20px;margin:4px 0 12px}
@@ -478,7 +475,6 @@ body:has(.header.hide) .fbar{top:0}
 .card h2{padding:14px 20px;font-size:16px;border-bottom:1px solid var(--line)}
 .sum2{display:grid;grid-template-columns:132px 1fr;gap:20px;padding:20px}
 .sum2 .p-img{aspect-ratio:1/1}
-.sum2 .book{width:58%}.sum2 .book span{font-size:13px}
 .sum2 h3{margin-bottom:8px;font-size:17px}
 .rows div{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;color:var(--muted);border-bottom:1px solid var(--line)}
 .rows div b{color:var(--ink)}

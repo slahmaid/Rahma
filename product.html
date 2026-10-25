@@ -59,44 +59,53 @@ async function sendOrder(order){
   }finally{clearTimeout(t)}
 }
 const PRODUCTS=[
-{id:'quran-big-blue',cat:'quran',name:'مصحف كبير - أزرق',price:200,c1:'#1d3f6e',c2:'#2f6aa8',desc:'مصحف شريف بحجم كبير وغلاف أزرق فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
-{id:'quran-big-red',cat:'quran',name:'مصحف كبير - أحمر',price:200,c1:'#7a1f24',c2:'#b23a3f',desc:'مصحف شريف بحجم كبير وغلاف أحمر فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
-{id:'quran-medium-black',cat:'quran',name:'مصحف متوسط - أسود',price:150,c1:'#1a1a1a',c2:'#3a3a3a',desc:'مصحف شريف بحجم متوسط وغلاف أسود أنيق، سهل الحمل ومناسب للتنقل والقراءة اليومية.'},
-{id:'pack-small',cat:'quran',tag:'باقة',name:'باقة صغيرة',price:200,c1:'#1f3a2e',c2:'#3d6b55',desc:'مجموعة مصاحف بحجم صغير في باقة واحدة، مناسبة للإهداء أو للتوزيع.'},
-{id:'pack-large',cat:'quran',tag:'الأكثر قيمة',name:'باقة كبيرة',price:500,c1:'#8a6420',c2:'#c99a3e',desc:'مجموعة مصاحف متكاملة في باقة واحدة، مناسبة للعائلة أو للمساجد والجمعيات.'},
-{id:'tafsir-jalalayn',cat:'tafassir',tag:'باقة',name:'باقة الجلالين + مصحف أسود',price:200,c1:'#1f3a2e',c2:'#3d6b55',desc:'باقة تضم تفسير الجلالين مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
-{id:'tafsir-sabri',cat:'tafassir',tag:'باقة',name:'باقة صابري + مصحف أسود',price:200,c1:'#3b2a1a',c2:'#6b4a2b',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
-{id:'tafsir-rahman',cat:'tafassir',tag:'باقة',name:'باقة الرحمن + مصحف أسود',price:250,c1:'#1a1a1a',c2:'#4d5a52',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'}];
+{id:'quran-big-blue',cat:'quran',name:'مصحف كبير - أزرق',price:200,img:'rev1',desc:'مصحف شريف بحجم كبير وغلاف أزرق فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
+{id:'quran-big-red',cat:'quran',name:'مصحف كبير - أحمر',price:200,img:'rev3',desc:'مصحف شريف بحجم كبير وغلاف أحمر فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
+{id:'quran-medium-black',cat:'quran',name:'مصحف متوسط - أسود',price:150,img:'pf-binding',desc:'مصحف شريف بحجم متوسط وغلاف أسود أنيق، سهل الحمل ومناسب للتنقل والقراءة اليومية.'},
+{id:'pack-small',cat:'quran',tag:'باقة',name:'باقة صغيرة',price:200,img:'pf-set',desc:'مجموعة مصاحف بحجم صغير في باقة واحدة، مناسبة للإهداء أو للتوزيع.'},
+{id:'pack-large',cat:'quran',tag:'الأكثر قيمة',name:'باقة كبيرة',price:500,img:'rev2',desc:'مجموعة مصاحف متكاملة في باقة واحدة، مناسبة للعائلة أو للمساجد والجمعيات.'},
+{id:'tafsir-jalalayn',cat:'tafassir',tag:'باقة',name:'باقة الجلالين + مصحف أسود',price:200,img:'pf-study',pos:'45% 50%',desc:'باقة تضم تفسير الجلالين مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
+{id:'tafsir-sabri',cat:'tafassir',tag:'باقة',name:'باقة صابري + مصحف أسود',price:200,img:'pf-library',pos:'80% 50%',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
+{id:'tafsir-rahman',cat:'tafassir',tag:'باقة',name:'باقة الرحمن + مصحف أسود',price:250,img:'ab-mission',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'}];
 const CATS={quran:'القرآن الكريم',tafassir:'التفاسير'};
 const FREE_OVER=200; // التوصيل مجاني فوق هذا المبلغ (كما في الصفحة الرئيسية)
 // Order sending: see ORDER CONFIG at the top of this script and backend/SETUP.md
-const book=(p,t='القرآن الكريم')=>`<div class="book" style="--c1:${p.c1};--c2:${p.c2}"><span>${t}</span></div>`;
-const card=p=>`<div class="p-card">${p.tag?`<span class="p-tag">${p.tag}</span>`:''}<a href="product.html?id=${p.id}" class="p-img" style="--c1:${p.c1};--c2:${p.c2}">${book(p)}</a><div class="p-body"><h3><a href="product.html?id=${p.id}">${p.name}</a></h3><p>${CATS[p.cat]}</p><div class="p-foot"><span class="price">${p.price} <small>درهم</small></span><a href="product.html?id=${p.id}" class="add">اطلب الآن</a></div></div></div>`;
+const pic=(n,alt,eager)=>{const sq=/^rev/.test(n);return `<picture><source srcset="img/${n}.webp" type="image/webp"><img src="img/${n}.jpg" alt="${alt}" width="${sq?800:1000}" height="${sq?800:750}" ${eager?'fetchpriority="high"':'loading="lazy"'} decoding="async"></picture>`};
+const card=p=>`<div class="p-card">${p.tag?`<span class="p-tag">${p.tag}</span>`:''}<a href="product.html?id=${p.id}" class="p-img"${p.pos?` style="--pos:${p.pos}"`:''}>${pic(p.img,p.name)}</a><div class="p-body"><h3><a href="product.html?id=${p.id}">${p.name}</a></h3><p>${CATS[p.cat]}</p><div class="p-foot"><span class="price">${p.price} <small>درهم</small></span><a href="product.html?id=${p.id}" class="add">اطلب الآن</a></div></div></div>`;
 const app=document.getElementById('app');
 const P=PRODUCTS.find(x=>x.id===new URLSearchParams(location.search).get('id'));
 if(!P){app.innerHTML=`<div class="nf"><h1>المنتج غير موجود</h1><a class="btn-main" href="index.html">العودة إلى المتجر</a></div>`}
 else{
 const G=P.cat==='tafassir'?'tafsir':P.id.startsWith('pack')?'packs':'mushaf',GL={mushaf:'المصاحف',packs:'الباقات',tafsir:'التفاسير'};
 document.title=P.name+' | صحابي';
-{const D='https://sahaby.ma',u=D+'/product.html?id='+P.id,md=document.querySelector('meta[name=description]');if(md)md.content=P.desc;
- document.querySelector('link[rel=canonical]')?.setAttribute('href',u);[['og:title',document.title],['og:url',u],['og:description',P.desc]].forEach(([p,v])=>document.querySelector(`meta[property="${p}"]`)?.setAttribute('content',v));
- const ld=document.createElement('script');ld.type='application/ld+json';ld.textContent=JSON.stringify({'@context':'https://schema.org','@type':'Product',name:P.name,description:P.desc,image:D+'/assets/og-image.jpg',sku:P.id,brand:{'@type':'Brand',name:'صحابي'},offers:{'@type':'Offer',url:u,priceCurrency:'MAD',price:String(P.price),availability:'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'صحابي'}}});document.head.appendChild(ld)}document.body.classList.add('pp-page');
-const views=[book(P),`<div class="open-v"><div>﴿ ﴾</div><div>﴿ ﴾</div></div>`,book(P,'صحابي')];
+{const D='https://sahaby.ma',u=D+'/product.html?id='+P.id,im=D+'/img/'+P.img+'.jpg',md=document.querySelector('meta[name=description]');if(md)md.content=P.desc;
+ document.querySelector('link[rel=canonical]')?.setAttribute('href',u);[['og:title',document.title],['og:url',u],['og:description',P.desc],['og:image',im]].forEach(([p,v])=>document.querySelector(`meta[property="${p}"]`)?.setAttribute('content',v));
+ document.querySelector('meta[name="twitter:image"]')?.setAttribute('content',im);
+ const ld=document.createElement('script');ld.type='application/ld+json';ld.textContent=JSON.stringify({'@context':'https://schema.org','@type':'Product',name:P.name,description:P.desc,image:im,sku:P.id,brand:{'@type':'Brand',name:'صحابي'},offers:{'@type':'Offer',url:u,priceCurrency:'MAD',price:String(P.price),availability:'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',seller:{'@type':'Organization',name:'صحابي'}}});document.head.appendChild(ld)}document.body.classList.add('pp-page');
+// Gallery: only photos that are true for this product, i.e. its own photo, the black mushaf that comes with every tafsir bundle, and the inside pages.
+const GAL=[P.img,...(P.cat==='tafassir'?['pf-binding']:[]),'pf-paper'].filter((n,i,a)=>a.indexOf(n)===i);
+const GAL_AR={'pf-binding':'المصحف الأسود المرفق','pf-paper':'من الداخل'};
+const galAlt=n=>n===P.img?P.name:P.name+' – '+GAL_AR[n];
+const galImg=(n,alt,load)=>`<picture><source srcset="img/${n}.webp" type="image/webp"><img src="img/${n}.jpg" alt="${alt}"${n===P.img&&P.pos?` style="--pos:${P.pos}"`:''} ${load} decoding="async"></picture>`;
+const views=GAL.map((n,i)=>galImg(n,galAlt(n),i?'loading="lazy"':'fetchpriority="high"'));
+const thumbs=GAL.map((n,i)=>`<button type="button" data-i="${i}" class="${i?'':'on'}" aria-label="${galAlt(n)}" aria-pressed="${!i}">${galImg(n,'','loading="lazy"')}</button>`).join('');
 const sim=PRODUCTS.filter(x=>x.id!==P.id).sort((a,b)=>(b.cat===P.cat)-(a.cat===P.cat)).slice(0,4);
 
 const IC={book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',gift:'<rect x="3" y="8" width="18" height="13"/><path d="M3 12h18M12 8v13M12 8S10 3 7.5 4.5 9 8 12 8zm0 0s2-5 4.5-3.5S15 8 12 8z"/>',truck:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',cash:'<rect x="2" y="6" width="20" height="12"/><circle cx="12" cy="12" r="3"/>',layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',star:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',home:'<path d="M3 11l9-7 9 7v10H3z"/><path d="M9 21v-6h6v6"/>',pen:'<path d="M4 20l4-1 11-11-3-3L5 16z"/>'};
 const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
 const RICH={
-mushaf:{rows:[['pf-paper','ورق مريح <span>للقراءة الطويلة</span>','صفحات بلون كريمي هادئ تريح العين، لتقرأ وردك اليومي براحة سواء في البيت أو في المسجد.'],['pf-binding','تجليد متين <span>يدوم لسنوات</span>','غلاف فاخر بزخارف ذهبية وتجليد قوي يحفظ المصحف مع كثرة الاستعمال، متوفر بألوان مختلفة تناسب ذوقك.'],['pf-gift','أجمل هدية <span>لمن تحب</span>','هدية ذات معنى تبقى مع صاحبها. نغلّف طلبك بعناية ليصل جاهزاً للإهداء.']],
+// rows list candidate photos; the first one not already shown in the gallery is used, so no photo repeats on a page
+mushaf:{rows:[[['pf-paper','ab-mission'],'ورق مريح <span>للقراءة الطويلة</span>','صفحات بلون كريمي هادئ تريح العين، لتقرأ وردك اليومي براحة سواء في البيت أو في المسجد.'],[['pf-binding','ab-story'],'تجليد متين <span>يدوم لسنوات</span>','غلاف فاخر بزخارف ذهبية وتجليد قوي يحفظ المصحف مع كثرة الاستعمال، متوفر بألوان مختلفة تناسب ذوقك.'],[['pf-gift','feat2'],'أجمل هدية <span>لمن تحب</span>','هدية ذات معنى تبقى مع صاحبها. نغلّف طلبك بعناية ليصل جاهزاً للإهداء.']],
  banner:['كلام الله في بيتك','اقرأ بخشوع، بخط عثماني واضح','خط واضح ومريح يساعدك على القراءة الصحيحة والتدبر، بحجم يناسب استعمالك.'],
  grid:[['eye','خط عثماني واضح','قراءة مريحة وسهلة'],['layers','أحجام مختلفة','كبير ومتوسط حسب حاجتك'],['shield','تجليد متين','يتحمل الاستعمال اليومي'],['gift','جاهز للإهداء','تغليف أنيق عند الطلب']]},
-pack:{rows:[['pf-set','مجموعة متكاملة <span>في باقة واحدة</span>','باقة تجمع عدة مصاحف بتصميم متناسق، مثالية للعائلة أو للتوزيع في المناسبات.'],['pf-paper','نفس الجودة <span>في كل مصحف</span>','كل مصحف في الباقة بورق مريح للعين وخط واضح، لتحصل على نفس تجربة القراءة.'],['pf-gift','تغليف أنيق <span>جاهز للإهداء</span>','نجهّز الباقة بعناية لتكون هدية مميزة في رمضان والأعياد والمناسبات العائلية.']],
+pack:{rows:[[['pf-set','rev2'],'مجموعة متكاملة <span>في باقة واحدة</span>','باقة تجمع عدة مصاحف بتصميم متناسق، مثالية للعائلة أو للتوزيع في المناسبات.'],[['pf-paper','feat1'],'نفس الجودة <span>في كل مصحف</span>','كل مصحف في الباقة بورق مريح للعين وخط واضح، لتحصل على نفس تجربة القراءة.'],[['pf-gift','ab-story'],'تغليف أنيق <span>جاهز للإهداء</span>','نجهّز الباقة بعناية لتكون هدية مميزة في رمضان والأعياد والمناسبات العائلية.']],
  banner:['قيمة أكبر','باقة واحدة… أجر يتضاعف','اقتنِ الباقة وأهدِ مصاحف لأحبابك أو للمساجد والجمعيات بسعر أفضل من الشراء بالقطعة.'],
  grid:[['layers','عدة مصاحف','في طلب واحد'],['star','قيمة أفضل','مقارنة بالشراء بالقطعة'],['gift','مثالية للإهداء','للمناسبات والأعياد'],['home','للعائلة والمسجد','وللجمعيات والتوزيع']]},
-tafsir:{rows:[['pf-study','افهم معاني <span>ما تقرأ</span>','باقة تجمع كتاب التفسير مع المصحف، لتقرأ الآية ثم تعود إلى تفسيرها بسهولة وتتدبر معانيها.'],['pf-binding','مصحف أسود <span>أنيق ومتين</span>','يأتي مع الباقة مصحف بغلاف أسود فاخر وتجليد قوي، يرافقك في القراءة والدراسة.'],['pf-library','إضافة قيّمة <span>لمكتبة بيتك</span>','كتب تبقى مرجعاً للعائلة لسنوات، وتزيّن مكتبتك المنزلية بحضور يليق بها.']],
+tafsir:{rows:[[['pf-study','ab-mission'],'افهم معاني <span>ما تقرأ</span>','باقة تجمع كتاب التفسير مع المصحف، لتقرأ الآية ثم تعود إلى تفسيرها بسهولة وتتدبر معانيها.'],[['pf-binding','ab-story'],'مصحف أسود <span>أنيق ومتين</span>','يأتي مع الباقة مصحف بغلاف أسود فاخر وتجليد قوي، يرافقك في القراءة والدراسة.'],[['pf-library','pf-set'],'إضافة قيّمة <span>لمكتبة بيتك</span>','كتب تبقى مرجعاً للعائلة لسنوات، وتزيّن مكتبتك المنزلية بحضور يليق بها.']],
  banner:['للدراسة والتدبر','مصحف وتفسير… في باقة واحدة','كل ما تحتاجه لبدء رحلة فهم القرآن الكريم، يصلك إلى باب بيتك والدفع عند الاستلام.'],
  grid:[['book','كتاب تفسير','لفهم معاني الآيات'],['eye','مصحف أسود','مرافق للتفسير'],['pen','دراسة سهلة','للمبتدئ والمتعمق'],['home','مكتبة البيت','مرجع للعائلة']]}};
 const R=RICH[P.cat==='tafassir'?'tafsir':P.id.startsWith('pack')?'pack':'mushaf'];
+{const used=new Set(GAL);R.rows=R.rows.map(([c,...t])=>{const n=c.find(x=>!used.has(x))||c[0];used.add(n);return [n,...t]})}
 const rich=`<section class="pf"><div class="sec-head"><h2>لماذا تختار ${P.name}؟</h2><p>تفاصيل تجعل طلبك مميزاً</p></div>
 <div class="pf-rows">${R.rows.map(r=>`<article class="pf-row"><div class="pf-img"><picture><source srcset="img/${r[0]}.webp" type="image/webp"><img src="img/${r[0]}.jpg" alt="${r[1].replace(/<[^>]+>/g,'')}" width="1000" height="750" loading="lazy" decoding="async"></picture></div><div class="pf-txt"><h3>${r[1]}</h3><p>${r[2]}</p></div></article>`).join('')}</div>
 <div class="pf-banner" style="background-image:url(img/pf-banner.jpg);background-image:image-set(url(img/pf-banner.webp) type("image/webp"),url(img/pf-banner.jpg) type("image/jpeg"))"><div><small>${R.banner[0]}</small><h3>${R.banner[1]}</h3><p>${R.banner[2]}</p><a href="#order">اطلب الآن</a></div></div>
@@ -104,7 +113,7 @@ const rich=`<section class="pf"><div class="sec-head"><h2>لماذا تختار 
 app.innerHTML=`
 <nav class="crumb"><a href="index.html">الرئيسية</a> / <a href="products.html">المنتجات</a> / <a href="products.html?cat=${G}">${GL[G]}</a> / <b>${P.name}</b></nav>
 <section class="pp">
- <div class="gal"><div class="gal-main" id="gm">${views[0]}</div><div class="gal-thumbs">${views.map((v,i)=>`<button data-i="${i}" class="${i?'':'on'}" aria-label="صورة ${i+1}">${i==1?'من الداخل':v}</button>`).join('')}</div></div>
+ <div class="gal"><div class="gal-main" id="gm">${views[0]}</div><div class="gal-thumbs">${thumbs}</div></div>
  <div class="pi">
   <div><span class="cat">${P.tag||CATS[P.cat]}</span><h1>${P.name}</h1><div class="pprice">${P.price} <small>درهم</small></div></div>
   <p class="desc">${P.desc}</p>
@@ -132,7 +141,7 @@ ${rich}
 <section class="products"><div class="sec-head"><h2>منتجات مشابهة</h2></div><div class="grid" id="sim">${sim.map(card).join('')}</div></section>
 <div class="sticky-buy" id="sb"><span class="sp"><bdi id="sbp"></bdi></span><a href="#order">اطلب الآن</a></div>`;
 const $=i=>document.getElementById(i);
-document.querySelectorAll('.gal-thumbs button').forEach(b=>b.onclick=()=>{$('gm').innerHTML=views[b.dataset.i];document.querySelectorAll('.gal-thumbs button').forEach(x=>x.classList.toggle('on',x===b))});
+document.querySelectorAll('.gal-thumbs button').forEach(b=>b.onclick=()=>{$('gm').innerHTML=views[b.dataset.i];document.querySelectorAll('.gal-thumbs button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b))})});
 const qty=()=>Math.min(99,Math.max(1,parseInt($('q').value)||1));
 // Percent off per code, for display only: keep in sync with PROMOS in backend/Code.gs, which re-checks every order (first order only).
 const PROMOS={SAHABY30:30};

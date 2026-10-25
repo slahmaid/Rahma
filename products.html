@@ -49,18 +49,19 @@
 <a href="https://wa.me/212600000000?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA%20%D8%B5%D8%AD%D8%A7%D8%A8%D9%8A" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/></svg></a>
 <script>
 const PRODUCTS=[
-{id:'quran-big-blue',cat:'quran',name:'مصحف كبير - أزرق',price:200,c1:'#1d3f6e',c2:'#2f6aa8',desc:'مصحف شريف بحجم كبير وغلاف أزرق فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
-{id:'quran-big-red',cat:'quran',name:'مصحف كبير - أحمر',price:200,c1:'#7a1f24',c2:'#b23a3f',desc:'مصحف شريف بحجم كبير وغلاف أحمر فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
-{id:'quran-medium-black',cat:'quran',name:'مصحف متوسط - أسود',price:150,c1:'#1a1a1a',c2:'#3a3a3a',desc:'مصحف شريف بحجم متوسط وغلاف أسود أنيق، سهل الحمل ومناسب للتنقل والقراءة اليومية.'},
-{id:'pack-small',cat:'quran',tag:'باقة',name:'باقة صغيرة',price:200,c1:'#1f3a2e',c2:'#3d6b55',desc:'مجموعة مصاحف بحجم صغير في باقة واحدة، مناسبة للإهداء أو للتوزيع.'},
-{id:'pack-large',cat:'quran',tag:'الأكثر قيمة',name:'باقة كبيرة',price:500,c1:'#8a6420',c2:'#c99a3e',desc:'مجموعة مصاحف متكاملة في باقة واحدة، مناسبة للعائلة أو للمساجد والجمعيات.'},
-{id:'tafsir-jalalayn',cat:'tafassir',tag:'باقة',name:'باقة الجلالين + مصحف أسود',price:200,c1:'#1f3a2e',c2:'#3d6b55',desc:'باقة تضم تفسير الجلالين مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
-{id:'tafsir-sabri',cat:'tafassir',tag:'باقة',name:'باقة صابري + مصحف أسود',price:200,c1:'#3b2a1a',c2:'#6b4a2b',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
-{id:'tafsir-rahman',cat:'tafassir',tag:'باقة',name:'باقة الرحمن + مصحف أسود',price:250,c1:'#1a1a1a',c2:'#4d5a52',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'}];
+{id:'quran-big-blue',cat:'quran',name:'مصحف كبير - أزرق',price:200,img:'rev1',desc:'مصحف شريف بحجم كبير وغلاف أزرق فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
+{id:'quran-big-red',cat:'quran',name:'مصحف كبير - أحمر',price:200,img:'rev3',desc:'مصحف شريف بحجم كبير وغلاف أحمر فاخر، مناسب للقراءة في البيت والمسجد، وهدية قيّمة لمن تحب.'},
+{id:'quran-medium-black',cat:'quran',name:'مصحف متوسط - أسود',price:150,img:'pf-binding',desc:'مصحف شريف بحجم متوسط وغلاف أسود أنيق، سهل الحمل ومناسب للتنقل والقراءة اليومية.'},
+{id:'pack-small',cat:'quran',tag:'باقة',name:'باقة صغيرة',price:200,img:'pf-set',desc:'مجموعة مصاحف بحجم صغير في باقة واحدة، مناسبة للإهداء أو للتوزيع.'},
+{id:'pack-large',cat:'quran',tag:'الأكثر قيمة',name:'باقة كبيرة',price:500,img:'rev2',desc:'مجموعة مصاحف متكاملة في باقة واحدة، مناسبة للعائلة أو للمساجد والجمعيات.'},
+{id:'tafsir-jalalayn',cat:'tafassir',tag:'باقة',name:'باقة الجلالين + مصحف أسود',price:200,img:'pf-study',pos:'45% 50%',desc:'باقة تضم تفسير الجلالين مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
+{id:'tafsir-sabri',cat:'tafassir',tag:'باقة',name:'باقة صابري + مصحف أسود',price:200,img:'pf-library',pos:'80% 50%',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'},
+{id:'tafsir-rahman',cat:'tafassir',tag:'باقة',name:'باقة الرحمن + مصحف أسود',price:250,img:'ab-mission',desc:'باقة تضم كتاب التفسير مع مصحف أسود، لتقرأ وتفهم معاني القرآن الكريم.'}];
 const grp=p=>p.cat==='tafassir'?'tafsir':p.id.startsWith('pack')?'packs':'mushaf';
 const CH=[['all','الكل'],['mushaf','المصاحف'],['packs','الباقات'],['tafsir','التفاسير']];
 const GL={mushaf:'المصاحف',packs:'الباقات',tafsir:'التفاسير'};
-const card=p=>`<div class="p-card">${p.tag?`<span class="p-tag">${p.tag}</span>`:''}<a href="product.html?id=${p.id}" class="p-img" style="--c1:${p.c1};--c2:${p.c2}"><div class="book"><span>القرآن الكريم</span></div></a><div class="p-body"><h3><a href="product.html?id=${p.id}">${p.name}</a></h3><p>${GL[grp(p)]}</p><div class="p-foot"><span class="price">${p.price} <small>درهم</small></span><a href="product.html?id=${p.id}" class="add">اطلب الآن</a></div></div></div>`;
+const pic=(n,alt)=>{const sq=/^rev/.test(n);return `<picture><source srcset="img/${n}.webp" type="image/webp"><img src="img/${n}.jpg" alt="${alt}" width="${sq?800:1000}" height="${sq?800:750}" loading="lazy" decoding="async"></picture>`};
+const card=p=>`<div class="p-card">${p.tag?`<span class="p-tag">${p.tag}</span>`:''}<a href="product.html?id=${p.id}" class="p-img"${p.pos?` style="--pos:${p.pos}"`:''}>${pic(p.img,p.name)}</a><div class="p-body"><h3><a href="product.html?id=${p.id}">${p.name}</a></h3><p>${GL[grp(p)]}</p><div class="p-foot"><span class="price">${p.price} <small>درهم</small></span><a href="product.html?id=${p.id}" class="add">اطلب الآن</a></div></div></div>`;
 const q=new URLSearchParams(location.search);
 let st={cat:CH.some(c=>c[0]===q.get('cat'))?q.get('cat'):'all',sort:q.get('sort')||'def',price:q.get('price')||'all'};
 const $=i=>document.getElementById(i);

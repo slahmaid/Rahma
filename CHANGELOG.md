@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-10-25 — Real product photos
+Products used CSS-drawn book covers. They now use the store's own photos, chosen by cover colour and product type:
+
+| Product | Photo |
+|---|---|
+| مصحف كبير - أزرق | `rev1`: navy cover with a gold medallion |
+| مصحف كبير - أحمر | `rev3`: red cover on a wooden stand |
+| مصحف متوسط - أسود | `pf-binding`: black leather cover |
+| باقة صغيرة | `pf-set`: stack of five Qurans |
+| باقة كبيرة | `rev2`: shipping box of Qurans; it is also the photo in the review about the large pack |
+| باقة الجلالين | `pf-study`: open tafsir next to a dark Quran |
+| باقة صابري | `pf-library`: shelf of multi-volume books |
+| باقة الرحمن | `ab-mission`: open book on a stand |
+
+- Product cards (home, catalog, similar products, thank-you) use these photos as square crops. A `pos` value moves the crop onto the book where it sits off-centre.
+- **Product page gallery:** shows only photos that are true for the product: its own photo, the inside pages, and, for tafsir bundles, the black Quran they include.
+- **Product page details:** each row lists fallback photos, so no photo appears twice on a page.
+- **SEO:** each product's `og:image`, `twitter:image` and Product JSON-LD now use its own photo instead of the site logo image.
+- **Home tafsir tile:** now uses the open-Quran photo (`pf-paper`), so it no longer repeats the Jalalayn photo.
+- Removed the book-mockup CSS.
+- To change a product's photo, edit `img` (and optionally `pos`) in the `PRODUCTS` list of `products.html`, `product.html` and `thank-you.html`, and in the static card in `index.html`.
+
 ## 2026-10-25 — Minimalist design system
 Checked every public page at 1280 and 375 px: no horizontal scroll, no console errors. Menu, slider, catalog filters, form validation, promo code and order confirmation were all re-tested.
 
